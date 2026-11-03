@@ -3,7 +3,7 @@ import FloatingVideo from "@/components/broadcast/FloatingVideo";
 export default function Home() {
   return (
     <main className="min-h-screen bg-[#111111] pb-[calc(6rem+env(safe-area-inset-bottom))] text-white">
-      <header className="sticky top-0 z-40 border-b border-[#3a3a3a] bg-[#111111]/95 backdrop-blur">
+      <header className=" top-0 z-40 border-b border-[#3a3a3a] bg-[#111111]/95 backdrop-blur">
         <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4 sm:px-6">
           <div>
             <h1 className="font-[family-name:var(--font-oswald)] text-xl font-bold tracking-wide sm:text-2xl">
