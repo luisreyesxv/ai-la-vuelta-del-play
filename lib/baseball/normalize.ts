@@ -113,26 +113,30 @@ export function normalizeGame(game: MLBGame): BaseballGame | null {
 
     away: {
       team: normalizeTeam(away.team),
-      score:
-        typeof away.score === "number"
-          ? {
-              runs: away.score,
-              hits: null,
-              errors: null,
-            }
-          : null,
+      score: {
+        runs:
+          typeof away.score === "number"
+            ? away.score
+            : (game.linescore?.teams?.away?.runs ?? null),
+
+        hits: game.linescore?.teams?.away?.hits ?? null,
+
+        errors: game.linescore?.teams?.away?.errors ?? null,
+      },
     },
 
     home: {
       team: normalizeTeam(home.team),
-      score:
-        typeof home.score === "number"
-          ? {
-              runs: home.score,
-              hits: null,
-              errors: null,
-            }
-          : null,
+      score: {
+        runs:
+          typeof home.score === "number"
+            ? home.score
+            : (game.linescore?.teams?.home?.runs ?? null),
+
+        hits: game.linescore?.teams?.home?.hits ?? null,
+
+        errors: game.linescore?.teams?.home?.errors ?? null,
+      },
     },
 
     inning: normalizeInning(game.linescore),

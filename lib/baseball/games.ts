@@ -2,9 +2,7 @@ import "server-only";
 
 import { BaseballGame, BaseballGamesResponse } from "@/types/baseball";
 
-import { LIDOM_CONFIG } from "@/lib/baseball/api";
-
-import { getCurrentLidomSeason, getLocalDate } from "@/lib/baseball/dates";
+import { getCurrentLidomSeason } from "@/lib/baseball/dates";
 
 import { getSeasonSchedule } from "@/lib/baseball/schedule";
 
@@ -18,6 +16,10 @@ import {
 
 const MAX_HISTORICAL_SEASONS = 10;
 
+/**
+ * Searches previous seasons for the latest completed
+ * Águilas game.
+ */
 async function getHistoricalFallback(
   currentSeason: number,
 ): Promise<BaseballGame | null> {
@@ -26,45 +28,49 @@ async function getHistoricalFallback(
 
     const rawGames = await getSeasonSchedule(season, true, true);
 
-    const games = rawGames
+    const completedGames = rawGames
       .map(normalizeGame)
       .filter(
-        (game): game is BaseballGame => game !== null && isAguilasGame(game),
+        (game): game is BaseballGame =>
+          game !== null && isAguilasGame(game) && game.status.type === "final",
       )
       .sort(newestFirst);
 
-    const completed = games.find((game) => game.status.type === "final");
+    const latestGame = completedGames[0];
 
-    if (completed) return completed;
+    if (latestGame) {
+      return latestGame;
+    }
   }
 
   return null;
 }
 
+/**
+ * Returns the latest completed Águilas game.
+ *
+ * Live and scheduled games are intentionally excluded.
+ */
 export async function getBaseballGames(): Promise<BaseballGamesResponse> {
-  const today = getLocalDate();
   const season = getCurrentLidomSeason();
 
   const currentRawGames = await getSeasonSchedule(season);
 
   const currentGames = currentRawGames
     .map(normalizeGame)
-    .filter((game): game is BaseballGame => game !== null)
+    .filter(
+      (game): game is BaseballGame =>
+        game !== null && isAguilasGame(game) && game.status.type === "final",
+    )
     .sort(newestFirst);
 
-  let selectedGame = selectAguilasGame(currentGames, currentRawGames, today);
+  let selectedGame = selectAguilasGame(currentGames);
 
-  const hasAguilasFinal = currentGames.some(
-    (game) => isAguilasGame(game) && game.status.type === "final",
-  );
+  if (!selectedGame) {
+    selectedGame = await getHistoricalFallback(season);
 
-  if (!hasAguilasFinal) {
-    const historicalGame = await getHistoricalFallback(season);
-
-    if (historicalGame) {
-      currentGames.push(historicalGame);
-
-      selectedGame = selectAguilasGame(currentGames, currentRawGames, today);
+    if (selectedGame) {
+      currentGames.push(selectedGame);
     }
   }
 

@@ -19,6 +19,12 @@ export interface MLBInning {
   away?: { runs?: number };
 }
 
+export interface MLBLineScoreTeam {
+  runs?: number;
+  hits?: number;
+  errors?: number;
+}
+
 export interface MLBGame {
   gamePk?: number;
   gameDate?: string;
@@ -41,6 +47,20 @@ export interface MLBGame {
   linescore?: {
     currentInning?: number;
     inningState?: string;
+
+    teams?: {
+      away?: {
+        runs?: number;
+        hits?: number;
+        errors?: number;
+      };
+      home?: {
+        runs?: number;
+        hits?: number;
+        errors?: number;
+      };
+    };
+
     innings?: MLBInning[];
   };
 }
