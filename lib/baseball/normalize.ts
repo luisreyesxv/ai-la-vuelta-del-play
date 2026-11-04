@@ -111,6 +111,23 @@ export function normalizeGame(game: MLBGame): BaseballGame | null {
       description: game.status?.detailedState ?? null,
     },
 
+    // Winning and losing pitchers
+    decisions: {
+      winner: game.decisions?.winner?.fullName
+        ? {
+            id: game.decisions.winner.id ?? 0,
+            fullName: game.decisions.winner.fullName,
+          }
+        : null,
+
+      loser: game.decisions?.loser?.fullName
+        ? {
+            id: game.decisions.loser.id ?? 0,
+            fullName: game.decisions.loser.fullName,
+          }
+        : null,
+    },
+
     away: {
       team: normalizeTeam(away.team),
       score: {

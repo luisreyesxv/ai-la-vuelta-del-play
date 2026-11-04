@@ -63,6 +63,17 @@ export interface MLBGame {
 
     innings?: MLBInning[];
   };
+  decisions?: {
+    winner?: {
+      id?: number;
+      fullName?: string;
+    } | null;
+
+    loser?: {
+      id?: number;
+      fullName?: string;
+    } | null;
+  } | null;
 }
 
 export interface MLBScheduleResponse {

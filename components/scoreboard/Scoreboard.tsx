@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
+import Link from "next/link";
 
 import { BaseballGamesResponse } from "@/types/baseball";
 
@@ -16,8 +17,6 @@ export default function Scoreboard() {
   const fetchGames = useCallback(async (manual = false) => {
     if (manual) {
       setRefreshing(true);
-    } else {
-      setLoading(true);
     }
 
     try {
@@ -44,8 +43,45 @@ export default function Scoreboard() {
   }, []);
 
   useEffect(() => {
-    void fetchGames();
-  }, [fetchGames]);
+    let cancelled = false;
+
+    async function loadInitialGames() {
+      try {
+        const response = await fetch("/api/baseball/games", {
+          cache: "no-store",
+        });
+
+        if (!response.ok) {
+          throw new Error("No se pudieron obtener los marcadores.");
+        }
+
+        const result: BaseballGamesResponse = await response.json();
+
+        if (!cancelled) {
+          setData(result);
+          setError(null);
+        }
+      } catch (err) {
+        if (!cancelled) {
+          setError(
+            err instanceof Error
+              ? err.message
+              : "Error al cargar los marcadores.",
+          );
+        }
+      } finally {
+        if (!cancelled) {
+          setLoading(false);
+        }
+      }
+    }
+
+    void loadInitialGames();
+
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   const selectedGame = data?.selectedGame;
 
@@ -121,6 +157,14 @@ export default function Scoreboard() {
           </div>
 
           <GameCard game={selectedGame} />
+
+          <Link
+            href={`/games/${selectedGame.gamePk}`}
+            className="mt-4 flex w-full items-center justify-center rounded-xl border border-[#806600] bg-[#f5c400] px-4 py-3 text-xs font-extrabold uppercase tracking-widest text-black transition-colors hover:bg-[#e9b900]"
+          >
+            VER DETALLES DEL PARTIDO →
+          </Link>
+
           {data && <TeamForm games={data.games} />}
 
           {data?.metadata.fetchedAt && (

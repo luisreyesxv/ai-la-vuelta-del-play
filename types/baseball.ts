@@ -76,13 +76,17 @@ export interface GameTeam {
 
 export interface BaseballGame {
   gamePk: number;
-
   gameDate: string;
 
   status: {
     type: GameStatusType;
     description: string | null;
   };
+
+  decisions?: {
+    winner: GameDecision | null;
+    loser: GameDecision | null;
+  } | null;
 
   away: GameTeam;
   home: GameTeam;
@@ -92,6 +96,11 @@ export interface BaseballGame {
   venue: string | null;
 
   updatedAt: string | null;
+}
+
+export interface GameDecision {
+  id: number;
+  fullName: string;
 }
 
 /* ---------------------------------------
