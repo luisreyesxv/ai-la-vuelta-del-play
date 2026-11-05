@@ -1,16 +1,64 @@
 import { NextRequest, NextResponse } from "next/server";
 
 import { getCurrentLidomSeason } from "@/lib/baseball/dates";
+import type { BaseballGame } from "@/types/baseball";
 import {
   getMLBSeasonSchedule,
   getSeasonSchedule,
 } from "@/lib/baseball/schedule";
+
+import { fetchStatsApi } from "@/lib/baseball/api";
+
+import type { MLBScheduleResponse } from "@/lib/baseball/mlb-types";
 
 import { normalizeGame } from "@/lib/baseball/normalize";
 import type { TeamId } from "@/contexts/TeamContext";
 
 export async function GET(request: NextRequest) {
   try {
+    const gamePkParam = request.nextUrl.searchParams.get("gamePk");
+
+    if (gamePkParam) {
+      const gamePk = Number(gamePkParam);
+
+      if (!Number.isSafeInteger(gamePk) || gamePk <= 0) {
+        return NextResponse.json(
+          { error: "Invalid game ID." },
+          { status: 400 },
+        );
+      }
+
+      const schedule = await fetchStatsApi<MLBScheduleResponse>("/schedule", {
+        query: {
+          gamePks: gamePk,
+          hydrate: "team,linescore,decisions",
+        },
+      });
+
+      const game = schedule.dates
+        ?.flatMap((date) => date.games ?? [])
+        .map(normalizeGame)
+        .find(
+          (item): item is BaseballGame =>
+            item !== null && item.gamePk === gamePk,
+        );
+
+      return NextResponse.json(
+        {
+          games: game ? [game] : [],
+          metadata: {
+            fetchedAt: new Date().toISOString(),
+            gamePk,
+          },
+        },
+        {
+          headers: {
+            "Cache-Control": "no-store",
+          },
+        },
+      );
+    }
+
     const requestedTeam = request.nextUrl.searchParams.get("team") ?? "aguilas";
 
     if (requestedTeam !== "aguilas" && requestedTeam !== "yankees") {
@@ -32,7 +80,7 @@ export async function GET(request: NextRequest) {
     const games = rawGames
       .map(normalizeGame)
       .filter(
-        (game) =>
+        (game): game is BaseballGame =>
           game !== null &&
           (game.home.team.id === teamId || game.away.team.id === teamId),
       )

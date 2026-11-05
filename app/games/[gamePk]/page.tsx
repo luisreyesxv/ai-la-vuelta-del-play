@@ -3,7 +3,6 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 
-import { useTeam } from "@/contexts/TeamContext";
 import { BaseballGame } from "@/types/baseball";
 import { GameBoxscore } from "@/types/boxscore";
 
@@ -15,7 +14,6 @@ type Tab = "summary" | "batting" | "pitching";
 export default function GameDetailsPage({ params }: Props) {
   const router = useRouter();
 
-  const { selectedTeam } = useTeam();
   const [gamePk, setGamePk] = useState<string | null>(null);
   const [game, setGame] = useState<BaseballGame | null>(null);
   const [boxscore, setBoxscore] = useState<GameBoxscore | null>(null);
@@ -47,9 +45,12 @@ export default function GameDetailsPage({ params }: Props) {
       try {
         setLoading(true);
         setError(false);
+        setGame(null);
+        setBoxscore(null);
 
+        // Fetch the exact game, independently of selectedTeam.
         const response = await fetch(
-          `/api/baseball/schedule?team=${selectedTeam}`,
+          `/api/baseball/schedule?gamePk=${gamePk}`,
           { cache: "no-store" },
         );
 
@@ -75,7 +76,7 @@ export default function GameDetailsPage({ params }: Props) {
           setBoxscoreLoading(true);
 
           const boxscoreResponse = await fetch(
-            `/api/baseball/games/${gamePk}?team=${selectedTeam}`,
+            `/api/baseball/games/${gamePk}`,
             { cache: "no-store" },
           );
 
@@ -104,7 +105,7 @@ export default function GameDetailsPage({ params }: Props) {
     return () => {
       cancelled = true;
     };
-  }, [gamePk, selectedTeam]);
+  }, [gamePk]);
 
   if (loading || !gamePk) {
     return (

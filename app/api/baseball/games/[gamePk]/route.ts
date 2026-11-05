@@ -1,12 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 
-import {
-  fetchStatsApi,
-  StatsApiError,
-  BASEBALL_CONFIG,
-} from "@/lib/baseball/api";
-
-import type { TeamId } from "@/contexts/TeamContext";
+import { fetchStatsApi, StatsApiError } from "@/lib/baseball/api";
 
 import type { MLBScheduleResponse, MLBGame } from "@/lib/baseball/mlb-types";
 
@@ -16,7 +10,7 @@ interface RouteContext {
   }>;
 }
 
-export async function GET(request: NextRequest, { params }: RouteContext) {
+export async function GET(_request: NextRequest, { params }: RouteContext) {
   try {
     const { gamePk } = await params;
     const id = Number(gamePk);
@@ -24,15 +18,6 @@ export async function GET(request: NextRequest, { params }: RouteContext) {
     if (!Number.isSafeInteger(id) || id <= 0) {
       return NextResponse.json({ error: "Invalid game ID." }, { status: 400 });
     }
-
-    const requestedTeam = request.nextUrl.searchParams.get("team") ?? "aguilas";
-
-    if (requestedTeam !== "aguilas" && requestedTeam !== "yankees") {
-      return NextResponse.json({ error: "Invalid team." }, { status: 400 });
-    }
-
-    const team = requestedTeam as TeamId;
-    const config = BASEBALL_CONFIG[team];
 
     const [boxscore, schedule] = await Promise.all([
       fetchStatsApi<Record<string, unknown>>(`/game/${id}/boxscore`, {
@@ -42,8 +27,6 @@ export async function GET(request: NextRequest, { params }: RouteContext) {
       fetchStatsApi<MLBScheduleResponse>("/schedule", {
         revalidateSeconds: 300,
         query: {
-          sportId: config.sportId,
-          leagueId: config.leagueId ?? undefined,
           gamePks: id,
           hydrate: "decisions",
         },

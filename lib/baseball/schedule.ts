@@ -62,7 +62,7 @@ export async function getSeasonSchedule(
 
 export async function getMLBSeasonSchedule(
   season: number,
-  teamId = BASEBALL_CONFIG.yankees.teamId,
+  teamId: number = BASEBALL_CONFIG.yankees.teamId,
   historical = false,
 ): Promise<MLBGame[]> {
   const response = await fetchStatsApi<MLBScheduleResponse>("/schedule", {
