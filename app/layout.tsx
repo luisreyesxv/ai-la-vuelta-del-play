@@ -7,6 +7,8 @@ import "./globals.css";
 import FloatingVideo from "@/components/broadcast/FloatingVideo";
 import BottomNav from "@/components/layout/BottomNav";
 import Footer from "@/components/layout/Footer";
+import { LanguageProvider } from "@/contexts/LanguageContext";
+import LanguageToggle from "@/components/layout/LanguageToggle";
 
 import { TeamProvider } from "@/contexts/TeamContext";
 
@@ -98,69 +100,33 @@ export default function RootLayout({
         className={`${oswald.variable} ${nunitoSans.variable} ${logoFont.variable} ${varsityFont.variable} ${athleticFont.variable}`}
       >
         <TeamProvider>
-          <header className=" top-0 z-40 border-b border-border bg-background/95 backdrop-blur">
-            <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4 sm:px-6">
-              <div>
-                <h1 className="font-logo text-team-secondary text-xl font-bold  uppercase tracking-wide sm:text-5xl">
-                  LA VUELTA{" "}
-                  <span className="text-team-secondary lowercase font-extrabold">
-                    DEL PLAY
-                  </span>
-                </h1>
-                <p className="text-[15px] font-logo uppercase font-bold tracking-widest text-accent">
-                  ¡LA PELOTA SE VIVE AQUÍ!
-                </p>
+          <LanguageProvider>
+            <header className=" top-0 z-40 border-b border-border bg-background/95 backdrop-blur">
+              <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4 sm:px-6">
+                <div>
+                  <h1 className="font-logo text-team-secondary text-xl font-bold  uppercase tracking-wide sm:text-5xl">
+                    LA VUELTA{" "}
+                    <span className="text-team-secondary lowercase font-extrabold">
+                      DEL PLAY
+                    </span>
+                  </h1>
+                  <p className="text-[15px] font-logo uppercase font-bold tracking-widest text-accent">
+                    ¡LA PELOTA SE VIVE AQUÍ!
+                  </p>
+                </div>
+
+                <LanguageToggle />
               </div>
+            </header>
 
-              <button
-                type="button"
-                aria-label="Idioma actual: español"
-                className="rounded-full border border-border px-3 py-2 text-xs font-extrabold text-primary"
-              >
-                ES <span className="text-subtle">/ EN</span>
-              </button>
-            </div>
-          </header>
-
-          <FloatingVideo>
-            <>
-              {children}
-              <Footer />
-            </>
-          </FloatingVideo>
-          {/* <nav className="fixed inset-x-0 bottom-0 z-50 border-t border-border bg-surface-overlay/95 pb-[env(safe-area-inset-bottom)] backdrop-blur">
-            <div className="mx-auto grid h-16 max-w-lg grid-cols-4">
-              <Link
-                href="/#"
-                className="flex flex-col items-center justify-center gap-1 text-primary"
-              >
-                <span className="text-xl">⌂</span>
-                <span className="text-[10px] font-bold">Inicio</span>
-              </Link>
-              <Link
-                href="/#marcadores"
-                className="flex flex-col items-center justify-center gap-1 text-muted"
-              >
-                <span className="text-xl">⚾</span>
-                <span className="text-[10px] font-bold">Marcadores</span>
-              </Link>
-              <Link
-                href="/#posiciones"
-                className="flex flex-col items-center justify-center gap-1 text-muted"
-              >
-                <span className="text-xl">🏆</span>
-                <span className="text-[10px] font-bold">Posiciones</span>
-              </Link>
-              <Link
-                href="/#juegos"
-                className="flex flex-col items-center justify-center gap-1 text-muted"
-              >
-                <span className="text-xl">📅</span>
-                <span className="text-[10px] font-bold">Juegos</span>
-              </Link>
-            </div>
-          </nav> */}
-          <BottomNav />
+            <FloatingVideo>
+              <>
+                {children}
+                <Footer />
+              </>
+            </FloatingVideo>
+            <BottomNav />
+          </LanguageProvider>
         </TeamProvider>
       </body>
     </html>

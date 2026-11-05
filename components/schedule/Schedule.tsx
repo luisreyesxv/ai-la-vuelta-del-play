@@ -5,6 +5,7 @@ import Link from "next/link";
 
 import { useTeam } from "@/contexts/TeamContext";
 import { BaseballGame } from "@/types/baseball";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 type ScheduleFilter = "upcoming" | "completed" | "suspended";
 
@@ -25,6 +26,7 @@ export default function Schedule() {
   const [error, setError] = useState(false);
 
   const { selectedTeam } = useTeam();
+  const { t, tReplace } = useLanguage();
 
   const teamId = TEAM_IDS[selectedTeam];
   const teamName = TEAM_NAMES[selectedTeam];
@@ -115,7 +117,8 @@ export default function Schedule() {
   if (loading) {
     return (
       <section className="py-8 text-center text-sm text-muted">
-        Cargando calendario de {teamName}...
+        {tReplace("loadingCalendar", teamName)}...Cargando calendario de{" "}
+        {teamName}...
       </section>
     );
   }
@@ -123,7 +126,7 @@ export default function Schedule() {
   if (error) {
     return (
       <section className="py-8 text-center text-sm text-red-400">
-        No fue posible cargar el calendario.
+        {t("failLoadingCalendar")}.
       </section>
     );
   }
@@ -132,60 +135,59 @@ export default function Schedule() {
     <section id="juegos" className="mt-10">
       <div className="mb-4 ">
         <p className="text-xs font-bold uppercase tracking-widest text-accent">
-          Nuestro equipo
+          {t("ourTeam")}
         </p>
 
         <h2 className="mt-1 font-varsity text-team-secondary text-3xl md:text-4xl font-bold uppercase">
-          Calendario {teamName}
+          {t("calendar")}
+          {teamName}
         </h2>
 
         <p className="mt-1 text-xs text-muted">
-          Sigue cada paso de {teamName}.
+          {tReplace("followTheTeam", teamName)}.
         </p>
       </div>
 
       <div className="mb-5 grid grid-cols-3 rounded-xl border border-border bg-surface p-1">
         <button
           onClick={() => setFilter("upcoming")}
-          className={`rounded-lg py-3 text-xs font-extrabold transition-colors ${
+          className={`rounded-lg py-3 text-xs font-extrabold transition-colors uppercase ${
             filter === "upcoming" ? "bg-primary text-on-primary" : "text-muted"
           }`}
         >
-          PRÓXIMOS ({upcomingGames.length})
+          {t("upcoming")} ({upcomingGames.length})
         </button>
 
         <button
           onClick={() => setFilter("completed")}
-          className={`rounded-lg py-3 text-xs font-extrabold transition-colors ${
+          className={`rounded-lg py-3 text-xs font-extrabold transition-colors uppercase ${
             filter === "completed" ? "bg-primary text-on-primary" : "text-muted"
           }`}
         >
-          FINALIZADOS ({completedGames.length})
+          {t("completed")} ({completedGames.length})
         </button>
 
         <button
           onClick={() => setFilter("suspended")}
-          className={`rounded-lg py-3 text-xs font-extrabold transition-colors ${
+          className={`rounded-lg py-3 text-xs font-extrabold transition-colors uppercase ${
             filter === "suspended" ? "bg-primary text-on-primary" : "text-muted"
           }`}
         >
-          SUSPENDIDOS ({suspendedGames.length})
+          {t("suspended")} ({suspendedGames.length})
         </button>
       </div>
 
       <div className="space-y-3">
         {displayedGames.length === 0 && (
           <div className="rounded-xl border border-border bg-surface p-6 text-center">
-            <p className="font-bold text-primary">
-              No hay partidos disponibles.
-            </p>
+            <p className="font-bold text-primary">{t("noGamesAvailable")}</p>
 
             <p className="mt-2 text-sm text-muted">
               {filter === "upcoming"
-                ? `Próximamente tendremos más acción de ${teamName}.`
+                ? tReplace("moreGamesComingSoon", teamName)
                 : filter === "completed"
-                  ? `Todavía no hay partidos finalizados de ${teamName}.`
-                  : `No hay partidos suspendidos de ${teamName}.`}
+                  ? tReplace("noCompletedGames", teamName)
+                  : tReplace("noSuspendedGames", teamName)}
             </p>
           </div>
         )}
@@ -214,14 +216,14 @@ export default function Schedule() {
 
                   <span className="text-[10px] font-extrabold uppercase tracking-widest text-primary">
                     {isFinal
-                      ? "FINAL"
+                      ? t("final")
                       : game.status.type === "live"
-                        ? "EN VIVO"
+                        ? t("live")
                         : game.status.type === "delayed"
-                          ? "DEMORADO"
+                          ? t("delayed")
                           : game.status.type === "suspended"
-                            ? "SUSPENDIDO"
-                            : "PRÓXIMO"}
+                            ? t("suspended")
+                            : t("upcoming")}
                   </span>
                 </div>
 
@@ -229,7 +231,7 @@ export default function Schedule() {
                   <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-3">
                     <div className="text-center ">
                       <p className="mb-2 text-[9px] font-extrabold uppercase tracking-widest text-muted">
-                        VISITANTE
+                        {t("awayTeam")}
                       </p>
 
                       <p
@@ -257,7 +259,7 @@ export default function Schedule() {
 
                     <div className="text-center">
                       <p className="mb-2 text-[9px] font-extrabold uppercase tracking-widest text-muted">
-                        LOCAL
+                        {t("homeTeam")}
                       </p>
 
                       <p
@@ -284,12 +286,12 @@ export default function Schedule() {
                 {isFinal && (
                   <div className="border-t border-white/10 px-4 py-3">
                     <p className="mb-3 text-[10px] font-extrabold uppercase tracking-widest text-primary">
-                      Estadísticas finales
+                      {t("finalStatistics")}
                     </p>
 
                     <div className="grid grid-cols-[minmax(0,1fr)_repeat(3,36px)] gap-2 text-center">
-                      <span className="text-left text-[10px] text-subtle">
-                        EQUIPO
+                      <span className="text-left text-[10px] text-subtle uppercase">
+                        {t("team")}
                       </span>
                       <span className="text-[10px] font-bold text-muted">
                         R
@@ -390,7 +392,7 @@ export default function Schedule() {
                 href={`/games/${game.gamePk}?team=${selectedTeam}`}
                 className="flex items-center justify-center gap-2 border-t border-white/10 bg-primary/80 px-4 py-4 text-xs font-extrabold uppercase tracking-widest text-primary transition-colors hover:bg-primary/90"
               >
-                VER DETALLES DEL PARTIDO
+                {t("viewGameDetails")}
                 <span aria-hidden="true">→</span>
               </Link>
             </div>

@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 
 import { BaseballGame } from "@/types/baseball";
 import { GameBoxscore } from "@/types/boxscore";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 type Props = {
   params: Promise<{ gamePk: string }>;
@@ -22,6 +23,8 @@ export default function GameDetailsPage({ params }: Props) {
   const [loading, setLoading] = useState(true);
   const [boxscoreLoading, setBoxscoreLoading] = useState(false);
   const [error, setError] = useState(false);
+
+  const { t, tReplace } = useLanguage();
 
   // Resolve dynamic route parameters without useParams().
   useEffect(() => {
@@ -122,7 +125,7 @@ export default function GameDetailsPage({ params }: Props) {
           <div className="mb-5 text-5xl">⚾</div>
 
           <h1 className="text-xl font-extrabold uppercase text-primary">
-            Información no disponible
+            {t("unavailable")}
           </h1>
 
           <p className="mt-4 text-sm leading-6 text-muted">
@@ -132,9 +135,9 @@ export default function GameDetailsPage({ params }: Props) {
 
           <button
             onClick={() => router.back()}
-            className="mt-7 rounded-lg bg-primary px-6 py-3 text-sm font-extrabold text-on-primary"
+            className="mt-7 rounded-lg bg-primary px-6 py-3 text-sm font-extrabold text-on-primary uppercase"
           >
-            ← VOLVER
+            ← {t("back")}
           </button>
         </div>
       </main>
@@ -149,16 +152,16 @@ export default function GameDetailsPage({ params }: Props) {
   }).format(new Date(game.gameDate));
 
   const teams = [
-    { label: "Visitante", data: boxscore?.teams?.away },
-    { label: "Local", data: boxscore?.teams?.home },
+    { label: t("awayTeam"), data: boxscore?.teams?.away },
+    { label: t("homeTeam"), data: boxscore?.teams?.home },
   ];
 
   const savePitcher = boxscore?.decisions?.save;
 
   const tabs: { id: Tab; label: string }[] = [
-    { id: "summary", label: "Resumen" },
-    { id: "batting", label: "Bateadores" },
-    { id: "pitching", label: "Lanzadores" },
+    { id: "summary", label: t("summary") },
+    { id: "batting", label: t("batting") },
+    { id: "pitching", label: t("pitching") },
   ];
 
   return (
@@ -166,13 +169,13 @@ export default function GameDetailsPage({ params }: Props) {
       <div className="mx-auto max-w-6xl">
         <button
           onClick={() => router.back()}
-          className="mb-6 text-xs font-bold text-accent"
+          className="mb-6 text-xs font-bold text-accent uppercase"
         >
-          ← VOLVER
+          ← {t("back")}
         </button>
 
         <p className="text-sm font-logo font-bold uppercase tracking-widest text-accent">
-          Detalles del partido
+          {t("gameDetails")}
         </p>
 
         <h1 className="mt-2 text-2xl text-team-secondary font-varsity font-extrabold uppercase">
@@ -187,7 +190,7 @@ export default function GameDetailsPage({ params }: Props) {
 
         <section className="mt-6 rounded-2xl border border-primary-muted bg-gradient-to-br from-(--color-background-gradient) to-surface-overlay p-5">
           <p className="mb-5 pb-2 text-center text-xs font-extrabold tracking-widest text-team-secondary">
-            {isFinal ? "FINAL" : (game.status.description ?? "PARTIDO")}
+            {isFinal ? t("final") : (game.status.description ?? "PARTIDO")}
           </p>
 
           {[game.away, game.home].map((team) => (
@@ -197,7 +200,7 @@ export default function GameDetailsPage({ params }: Props) {
             >
               <span className="font-bold">{team.team.name}</span>
 
-              <span className="font-[family-name:var(--font-oswald)] text-4xl font-bold text-primary">
+              <span className="font-athletic text-4xl font-bold text-primary">
                 {team.score?.runs ?? "—"}
               </span>
             </div>
@@ -215,27 +218,27 @@ export default function GameDetailsPage({ params }: Props) {
         {isFinal && boxscore && (
           <section className="mt-6 rounded-2xl border border-border bg-surface p-5">
             <h2 className="mb-5 text-md font-varsity font-extrabold uppercase tracking-widest text-team-secondary">
-              Decisiones del partido
+              {t("gameDecisions")}
             </h2>
 
             <div className="grid grid-cols-2 gap-4 mt-6">
               <div className="rounded-xl border border-border bg-surface p-4">
                 <p className="text-xl font-logo font-black uppercase text-muted">
-                  Pitcher ganador
+                  {t("winningPitcher")}
                 </p>
 
                 <p className="mt-2 text-2xl font-extrabold text-team-secondary">
-                  {game.decisions?.winner?.fullName ?? "No disponible"}
+                  {game.decisions?.winner?.fullName ?? t("unavailable")}
                 </p>
               </div>
 
               <div className="rounded-xl border border-border bg-surface p-4">
                 <p className="text-xl font-logo font-black uppercase text-muted">
-                  Pitcher perdedor
+                  {t("losingPitcher")}
                 </p>
 
                 <p className="mt-2 text-2xl font-extrabold text-team-secondary">
-                  {game.decisions?.loser?.fullName ?? "No disponible"}
+                  {game.decisions?.loser?.fullName ?? t("unavailable")}
                 </p>
               </div>
             </div>
@@ -243,7 +246,7 @@ export default function GameDetailsPage({ params }: Props) {
             {savePitcher?.fullName && (
               <div className="mt-4 rounded-xl bg-surface-overlay p-4">
                 <p className="text-xl font-logo font-black uppercase text-accent">
-                  Juego salvado
+                  {t("save")}
                 </p>
                 <p className="mt-2 font-extrabold">{savePitcher.fullName}</p>
               </div>
@@ -276,7 +279,7 @@ export default function GameDetailsPage({ params }: Props) {
         {activeTab === "summary" && (
           <section className="mt-8">
             <h2 className="mb-4 text-lg text-team-secondary font-extrabold uppercase">
-              Resultados por entrada
+              {t("inningResults")}
             </h2>
 
             {game.inning?.scores?.length ? (
@@ -284,7 +287,7 @@ export default function GameDetailsPage({ params }: Props) {
                 <table className="w-full text-center text-sm">
                   <thead className="text-accent">
                     <tr>
-                      <th className="p-3 text-left">Equipo</th>
+                      <th className="p-3 text-left">{t("team")}</th>
                       {game.inning.scores.map((inning) => (
                         <th key={inning.inning} className="p-3">
                           {inning.inning}
@@ -302,7 +305,7 @@ export default function GameDetailsPage({ params }: Props) {
                         <td className="p-3 text-left font-bold">
                           {/*  */}
                           {team.team.name} (
-                          {index === 0 ? "Visitante" : "Local"})
+                          {index === 0 ? t("awayTeam") : t("homeTeam")})
                         </td>
 
                         {game.inning!.scores.map((inning) => (
@@ -319,7 +322,7 @@ export default function GameDetailsPage({ params }: Props) {
               </div>
             ) : (
               <p className="rounded-xl bg-surface p-4 text-sm text-muted">
-                Resultados por entrada no disponibles.
+                {t("inningResultsUnavailable")}.
               </p>
             )}
           </section>
@@ -330,16 +333,16 @@ export default function GameDetailsPage({ params }: Props) {
         {activeTab === "batting" && (
           <section className="mt-8 space-y-8 ">
             <h2 className="text-xl font-atheltic font-extrabold uppercase">
-              Estadísticas de bateadores
+              {t("battingStats")}
             </h2>
 
             {boxscoreLoading && (
-              <p className="text-sm text-muted">Cargando estadísticas...</p>
+              <p className="text-sm text-muted">{t("loadingStatistics")}</p>
             )}
 
             {!boxscoreLoading && !boxscore && (
               <p className="rounded-xl font-athletic bg-surface p-4 text-sm text-muted">
-                Las estadísticas no están disponibles.
+                {t("statisticsUnavailable")}
               </p>
             )}
 
@@ -359,7 +362,7 @@ export default function GameDetailsPage({ params }: Props) {
                       <table className="w-full text-center text-xs">
                         <thead className="text-accent">
                           <tr>
-                            <th className="p-3 text-left">Jugador</th>
+                            <th className="p-3 text-left">{t("player")}</th>
                             <th>AB</th>
                             <th>H</th>
                             <th>R</th>
@@ -402,7 +405,7 @@ export default function GameDetailsPage({ params }: Props) {
                           {players.length === 0 && (
                             <tr>
                               <td colSpan={11} className="p-4 text-muted">
-                                Estadísticas no disponibles.
+                                {t("statisticsNotAvailable")}.
                               </td>
                             </tr>
                           )}
@@ -420,7 +423,7 @@ export default function GameDetailsPage({ params }: Props) {
         {activeTab === "pitching" && (
           <section className="mt-8 space-y-8">
             <h2 className="text-xl font-extrabold uppercase">
-              Estadísticas de lanzadores
+              {t("pitchingStats")}
             </h2>
 
             {boxscore &&
@@ -439,7 +442,9 @@ export default function GameDetailsPage({ params }: Props) {
                       <table className="w-full text-center text-xs">
                         <thead className="text-accent">
                           <tr>
-                            <th className="p-3 text-left">Lanzador</th>
+                            <th className="p-3 text-left capitalize">
+                              {t("pitcher")}
+                            </th>
                             <th>IP</th>
                             <th>H</th>
                             <th>R</th>
@@ -478,7 +483,7 @@ export default function GameDetailsPage({ params }: Props) {
                           {players.length === 0 && (
                             <tr>
                               <td colSpan={9} className="p-4 text-muted">
-                                Estadísticas no disponibles.
+                                {t("statisticsNotAvailable")}
                               </td>
                             </tr>
                           )}
@@ -490,12 +495,12 @@ export default function GameDetailsPage({ params }: Props) {
               })}
 
             {boxscoreLoading && (
-              <p className="text-sm text-muted">Cargando estadísticas...</p>
+              <p className="text-sm text-muted">{t("loadingStatistics")}</p>
             )}
 
             {!boxscoreLoading && !boxscore && (
               <p className="rounded-xl font-athletic bg-surface p-4 text-sm text-muted">
-                Estadísticas no disponibles.
+                {t("statisticsNotAvailable")}.
               </p>
             )}
           </section>

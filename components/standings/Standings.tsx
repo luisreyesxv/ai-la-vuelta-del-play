@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 import { useTeam } from "@/contexts/TeamContext";
 import { BaseballStandingsResponse } from "@/types/baseball";
@@ -20,6 +21,7 @@ const LEAGUE_NAMES = {
 
 export default function Standings() {
   const { selectedTeam } = useTeam();
+  const { t, tReplace } = useLanguage();
 
   const [data, setData] = useState<BaseballStandingsResponse | null>(null);
 
@@ -103,21 +105,21 @@ export default function Standings() {
     <section className="mt-8">
       <div id="posiciones" className="mb-4">
         <p className="text-md font-bold font-logo uppercase tracking-widest text-accent">
-          La temporada
+          {t("season")}
         </p>
 
         <h2 className="mt-1 font-varsity text-team-secondary text-3xl md:text-4xl font-bold uppercase">
-          Posiciones {LEAGUE_NAMES[selectedTeam]}
+          {tReplace("standings", LEAGUE_NAMES[selectedTeam])}
         </h2>
 
         <p className="mt-1 text-xs text-muted">
-          Así marcha {TEAM_NAMES[selectedTeam]} en su liga.
+          {tReplace("leagueStandingDescription", TEAM_NAMES[selectedTeam])}
         </p>
       </div>
 
       {loading && !data && (
         <div className="rounded-xl border border-border bg-surface p-6 text-center">
-          <p className="text-sm text-muted">Cargando posiciones...</p>
+          <p className="text-sm text-muted">{t("loadingStandings")}...</p>
         </div>
       )}
 
@@ -127,9 +129,9 @@ export default function Standings() {
 
           <button
             onClick={() => void fetchStandings(true)}
-            className="mt-3 text-xs font-bold text-primary"
+            className="mt-3 text-xs font-bold text-primary capitalize"
           >
-            Intentar nuevamente
+            {t("tryAgain")}
           </button>
         </div>
       )}
@@ -146,7 +148,7 @@ export default function Standings() {
 
           {error && (
             <p className="mt-2 text-xs text-accent">
-              {error} Mostrando los últimos datos recibidos.
+              {error} {t("showingLatestData")}
             </p>
           )}
         </>
@@ -154,9 +156,7 @@ export default function Standings() {
 
       {data && data.data.standings.length === 0 && (
         <div className="rounded-xl border border-border bg-surface p-6 text-center">
-          <p className="text-sm text-muted">
-            No hay posiciones disponibles actualmente.
-          </p>
+          <p className="text-sm text-muted">{t("noStandingsAvailable")}.</p>
         </div>
       )}
     </section>

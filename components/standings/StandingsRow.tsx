@@ -1,4 +1,5 @@
 import { TeamStanding } from "@/types/baseball";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 interface StandingRowProps {
   standing: TeamStanding;
@@ -6,6 +7,8 @@ interface StandingRowProps {
 
 export default function StandingsRow({ standing }: StandingRowProps) {
   const isAguilas = standing.team.id === 667 || standing.team.id === 147;
+
+  const { t } = useLanguage();
 
   return (
     <div
@@ -36,7 +39,7 @@ export default function StandingsRow({ standing }: StandingRowProps) {
 
         {isAguilas && (
           <span className="text-[9px] font-extrabold uppercase tracking-widest text-accent">
-            Nuestro equipo
+            {t("ourTeam")}
           </span>
         )}
       </div>

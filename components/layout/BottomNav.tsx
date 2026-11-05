@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 function scrollToSection(
   event: React.MouseEvent<HTMLAnchorElement>,
@@ -27,6 +28,7 @@ function scrollToSection(
 }
 
 export default function BottomNav() {
+  const { t } = useLanguage();
   return (
     <nav className="fixed inset-x-0 bottom-0 z-50 border-t border-border bg-surface-overlay/95 pb-[env(safe-area-inset-bottom)] backdrop-blur">
       <div className="mx-auto grid h-16 max-w-lg grid-cols-4">
@@ -43,7 +45,7 @@ export default function BottomNav() {
           className="flex flex-col items-center justify-center gap-1 text-primary"
         >
           <span className="text-xl">⌂</span>
-          <span className="text-[10px] font-bold">Inicio</span>
+          <span className="text-[10px] font-bold">{t("home")}</span>
         </Link>
 
         <Link
@@ -52,7 +54,7 @@ export default function BottomNav() {
           className="flex flex-col items-center justify-center gap-1 text-muted"
         >
           <span className="text-xl">⚾</span>
-          <span className="text-[10px] font-bold">Marcadores</span>
+          <span className="text-[10px] font-bold">{t("scores")}</span>
         </Link>
 
         <Link
@@ -61,7 +63,7 @@ export default function BottomNav() {
           className="flex flex-col items-center justify-center gap-1 text-muted"
         >
           <span className="text-xl">🏆</span>
-          <span className="text-[10px] font-bold">Posiciones</span>
+          <span className="text-[10px] font-bold">{t("standings")}</span>
         </Link>
 
         <Link
@@ -70,7 +72,7 @@ export default function BottomNav() {
           className="flex flex-col items-center justify-center gap-1 text-muted"
         >
           <span className="text-xl">📅</span>
-          <span className="text-[10px] font-bold">Juegos</span>
+          <span className="text-[10px] font-bold">{t("games")}</span>
         </Link>
       </div>
     </nav>

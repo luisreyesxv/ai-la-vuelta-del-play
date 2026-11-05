@@ -2,6 +2,7 @@ import { BaseballGame } from "@/types/baseball";
 
 import GameStatus from "@/components/scoreboard/GameStatus";
 import TeamScore from "@/components/scoreboard/TeamScore";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 interface GameCardProps {
   game: BaseballGame;
@@ -11,6 +12,7 @@ interface GameCardProps {
 export default function GameCard({ game, teamId }: GameCardProps) {
   const isAguilasHome = game.home.team.id === teamId;
   const isAguilasAway = game.away.team.id === teamId;
+  const { t } = useLanguage();
 
   const opponent = isAguilasHome ? game.away.team.name : game.home.team.name;
 
@@ -32,8 +34,8 @@ export default function GameCard({ game, teamId }: GameCardProps) {
             description={game.status.description}
           />
 
-          <span className="text-[10px] font-bold uppercase tracking-widest text-primary">
-            ÚLTIMO PARTIDO
+          <span className="text-[10px] font-bold uppercase tracking-widest text-team-secondary">
+            {t("lastGame")}
           </span>
         </div>
 

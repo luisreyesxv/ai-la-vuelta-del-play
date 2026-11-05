@@ -4,6 +4,8 @@ import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
 
 import { useTeam } from "@/contexts/TeamContext";
+import { useLanguage } from "@/contexts/LanguageContext";
+
 import { BaseballGamesResponse } from "@/types/baseball";
 
 import GameCard from "@/components/scoreboard/GameCard";
@@ -21,6 +23,8 @@ export default function Scoreboard() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [refreshing, setRefreshing] = useState(false);
+
+  const { t } = useLanguage();
 
   const fetchGames = useCallback(
     async (manual = false) => {
@@ -111,11 +115,11 @@ export default function Scoreboard() {
       <div className="mb-4 flex items-end justify-between">
         <div>
           <p className="text-md font-bold  font-logo uppercase tracking-widest text-accent">
-            Sigue la pelota
+            {t("followBaseball")}
           </p>
 
           <h2 className="mt-1 font-varsity  text-team-secondary text-3xl md:text-4xl">
-            Marcadores
+            {t("scores")}
           </h2>
 
           <p className="mt-1 text-xs text-muted">{teamName}</p>
@@ -127,7 +131,7 @@ export default function Scoreboard() {
           disabled={refreshing}
           className="rounded-lg border border-border px-3 py-2 text-xs font-bold text-accent transition-colors hover:border-primary disabled:opacity-50"
         >
-          {refreshing ? "ACTUALIZANDO..." : "↻ ACTUALIZAR"}
+          {refreshing ? `${t("refreshing")}...` : `↻ ${t("refresh")}`}
         </button>
       </div>
 
@@ -148,24 +152,20 @@ export default function Scoreboard() {
             onClick={() => void fetchGames()}
             className="mt-3 text-xs font-bold text-primary"
           >
-            INTENTAR DE NUEVO
+            {t("tryAgain")}
           </button>
         </div>
       )}
 
       {error && data && (
-        <p className="mb-3 text-xs text-danger">
-          No se pudo actualizar. Mostrando los últimos datos recibidos.
-        </p>
+        <p className="mb-3 text-xs text-danger">{t("updateFailed")}</p>
       )}
 
       {!loading && !error && !selectedGame && (
         <div className="rounded-xl border border-border bg-surface p-5">
           <p className="font-bold text-primary">{teamName}</p>
 
-          <p className="mt-2 text-sm text-muted">
-            Todavía no hay un partido finalizado disponible.
-          </p>
+          <p className="mt-2 text-sm text-muted">{t("noFinalGameAvailable")}</p>
         </div>
       )}
 
@@ -173,7 +173,7 @@ export default function Scoreboard() {
         <div>
           <div className="mb-3 flex items-center gap-2">
             <h3 className="text-md font-light font-logo uppercase tracking-widest text-accent">
-              Nuestro equipo
+              {t("ourTeam")}
             </h3>
           </div>
 
@@ -186,7 +186,7 @@ export default function Scoreboard() {
             href={`/games/${selectedGame.gamePk}?team=${selectedTeam}`}
             className="mt-4 flex w-full items-center justify-center rounded-xl border border-primary-muted  bg-accent px-4 py-3 text-xs font-extrabold uppercase tracking-widest text-on-primary transition-colors hover:bg-primary-hover"
           >
-            VER DETALLES DEL PARTIDO →
+            {t("viewGameDetails")} →
           </Link>
 
           {data && (
@@ -199,7 +199,8 @@ export default function Scoreboard() {
 
           {data?.metadata.fetchedAt && (
             <p className="mt-3 text-right text-[10px] text-subtle">
-              Datos consultados:{" "}
+              {t("dataRetrieved")}
+              {": "}
               {new Date(data.metadata.fetchedAt).toLocaleTimeString("es-DO", {
                 hour: "2-digit",
                 minute: "2-digit",

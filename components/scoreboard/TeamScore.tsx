@@ -1,4 +1,5 @@
 import { GameTeam } from "@/types/baseball";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 interface TeamScoreProps {
   data: GameTeam;
@@ -7,7 +8,8 @@ interface TeamScoreProps {
 }
 
 export default function TeamScore({ data, isAguilas, isHome }: TeamScoreProps) {
-  const scoreColor = isAguilas ? "text-primary" : "text-white";
+  const scoreColor = isAguilas ? "text-accent" : "text-white";
+  const { t } = useLanguage();
 
   return (
     <div
@@ -29,7 +31,7 @@ export default function TeamScore({ data, isAguilas, isHome }: TeamScoreProps) {
           </p>
 
           <p className="mt-1 text-[9px] font-bold uppercase tracking-widest text-muted">
-            {isHome ? "LOCAL" : "VISITANTE"}
+            {isHome ? t("homeTeam") : t("awayTeam")}
           </p>
         </div>
 

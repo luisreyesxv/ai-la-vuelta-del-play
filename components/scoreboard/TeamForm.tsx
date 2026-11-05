@@ -1,4 +1,5 @@
 import { BaseballGame } from "@/types/baseball";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 interface TeamFormProps {
   games: BaseballGame[];
@@ -7,6 +8,8 @@ interface TeamFormProps {
 }
 
 export default function TeamForm({ games, teamId, teamName }: TeamFormProps) {
+  const { t } = useLanguage();
+
   const results = games
     .filter((game) => game.status.type === "final")
     .filter(
@@ -42,11 +45,11 @@ export default function TeamForm({ games, teamId, teamName }: TeamFormProps) {
     <section className="mt-8 rounded-2xl border border-border bg-surface p-4">
       <div className="mb-4">
         <p className="text-lg font-logo font-bold uppercase tracking-widest text-accent">
-          Rendimiento reciente
+          {t("recentPerformance")}
         </p>
 
         <h2 className="mt-1 font-varsity text-team-secondary text-xl font-bold uppercase">
-          Últimos 5 partidos
+          {t("lastFiveGames")}
         </h2>
 
         <p className="mt-1 text-xs text-muted">{teamName}</p>
@@ -59,7 +62,7 @@ export default function TeamForm({ games, teamId, teamName }: TeamFormProps) {
           </p>
 
           <p className="mt-1 text-[10px] uppercase tracking-widest text-muted">
-            Ganados - Perdidos
+            {t("wins")} - {t("losses")}
           </p>
         </div>
 
@@ -70,7 +73,7 @@ export default function TeamForm({ games, teamId, teamName }: TeamFormProps) {
           </p>
 
           <p className="mt-1 text-[10px] uppercase tracking-widest text-muted">
-            Victorias
+            {t("victories")}
           </p>
         </div>
       </div>
@@ -90,9 +93,7 @@ export default function TeamForm({ games, teamId, teamName }: TeamFormProps) {
             </div>
           ))
         ) : (
-          <p className="text-xs text-muted">
-            No hay resultados recientes disponibles.
-          </p>
+          <p className="text-xs text-muted">{t("noRecentResults")}</p>
         )}
       </div>
     </section>

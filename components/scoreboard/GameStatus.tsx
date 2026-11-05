@@ -1,23 +1,28 @@
 import { GameStatusType } from "@/types/baseball";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 interface GameStatusProps {
   status: GameStatusType;
   description?: string | null;
 }
 
-const STATUS_LABELS: Record<GameStatusType, string> = {
-  live: "EN VIVO",
-  final: "FINAL",
-  scheduled: "PROGRAMADO",
-  delayed: "DEMORADO",
-  postponed: "POSPUESTO",
-  suspended: "SUSPENDIDO",
-  cancelled: "CANCELADO",
-  unknown: "ESTADO DESCONOCIDO",
-};
-
 export default function GameStatus({ status, description }: GameStatusProps) {
   const isLive = status === "live";
+  const { t } = useLanguage();
+
+  function STATUS_LABELS(status: GameStatusType): string {
+    const labels = {
+      live: t("live"),
+      final: t("final"),
+      scheduled: t("scheduled"),
+      delayed: t("delayed"),
+      postponed: t("postponed"),
+      suspended: t("suspended"),
+      cancelled: t("cancelled"),
+      unknown: t("unknown"),
+    };
+    return labels[status];
+  }
 
   return (
     <div className="flex items-center gap-2">
@@ -32,7 +37,7 @@ export default function GameStatus({ status, description }: GameStatusProps) {
       />
 
       <span className="text-[10px] font-extrabold tracking-widest text--secondary">
-        {STATUS_LABELS[status]}
+        {STATUS_LABELS(status)}
       </span>
 
       {description && status === "delayed" && (
