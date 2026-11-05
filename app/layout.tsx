@@ -1,10 +1,13 @@
 import type { Metadata, Viewport } from "next";
 import { Nunito_Sans, Oswald } from "next/font/google";
 import Link from "next/link";
+import dynamic from "next/dynamic";
 
 import "./globals.css";
 
 import FloatingVideo from "@/components/broadcast/FloatingVideo";
+import Footer from "@/components/layout/Footer";
+
 import { TeamProvider } from "@/contexts/TeamContext";
 
 const oswald = Oswald({
@@ -72,6 +75,7 @@ export default function RootLayout({
 
           <FloatingVideo />
           {children}
+          <Footer />
           <nav className="fixed inset-x-0 bottom-0 z-50 border-t border-border bg-surface-overlay/95 pb-[env(safe-area-inset-bottom)] backdrop-blur">
             <div className="mx-auto grid h-16 max-w-lg grid-cols-4">
               <Link

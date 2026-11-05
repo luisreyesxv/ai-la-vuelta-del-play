@@ -19,7 +19,7 @@ export default function Home() {
           <Schedule />
         </section>
 
-        <Footer />
+        {/* <Footer /> */}
       </div>
     </main>
   );
