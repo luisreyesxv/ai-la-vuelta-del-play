@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 import { useTeam, type TeamId } from "@/contexts/TeamContext";
 
 const PLAYLISTS: Record<TeamId, string> = {
@@ -13,90 +13,69 @@ const TEAM_NAMES: Record<TeamId, string> = {
   yankees: "New York Yankees",
 };
 
-export default function FloatingVideo() {
-  const { selectedTeam, setSelectedTeam } = useTeam();
+interface FloatingVideoProps {
+  children: ReactNode;
+}
 
-  // Independent state: changing the baseball team never changes this.
+export default function FloatingVideo({ children }: FloatingVideoProps) {
+  const { setSelectedTeam } = useTeam();
+
   const [videoTeam, setVideoTeam] = useState<TeamId>("aguilas");
-
+  const [isMini, setIsMini] = useState(false);
   const [isHeaderHidden, setIsHeaderHidden] = useState(false);
 
   useEffect(() => {
     const header = document.querySelector("header");
-
     if (!header) return;
 
     const observer = new IntersectionObserver(
       ([entry]) => {
-        const hidden = !entry.isIntersecting;
-
-        setIsHeaderHidden((previous) =>
-          previous === hidden ? previous : hidden,
-        );
+        setIsHeaderHidden(!entry.isIntersecting);
       },
       { threshold: 0 },
     );
 
     observer.observe(header);
-
     return () => observer.disconnect();
   }, []);
 
-  /**
-   * Changes baseball information only.
-   * The YouTube iframe remains untouched.
-   */
-  function handleInformationTeamChange(team: TeamId) {
-    setSelectedTeam(team);
-  }
+  function handleTeamChange() {
+    const nextTeam: TeamId = videoTeam === "aguilas" ? "yankees" : "aguilas";
 
-  /**
-   * Changes the broadcast only after explicit confirmation.
-   */
-
-  function handleBroadcastChange() {
-    if (selectedTeam === videoTeam) return;
-
-    const currentTeamName = TEAM_NAMES[videoTeam];
-    const nextTeamName = TEAM_NAMES[selectedTeam];
-
-    const confirmed = window.confirm(
-      `¿Cambiar la transmisión?\n\n` +
-        `Actualmente estás viendo: ${currentTeamName}.\n\n` +
-        `La información del equipo puede cambiar sin interrumpir ` +
-        `el video actual.\n\n` +
-        `Si continúas, la transmisión actual de ${currentTeamName} ` +
-        `será reemplazada por la transmisión de ${nextTeamName}.\n\n` +
-        `¿Deseas continuar?`,
-    );
-
-    if (!confirmed) return;
-
-    setVideoTeam(selectedTeam);
+    setVideoTeam(nextTeam);
+    setSelectedTeam(nextTeam);
   }
 
   const isVideoAguilas = videoTeam === "aguilas";
 
-  const isSelectedTeamDifferent = selectedTeam !== videoTeam;
+  // Mobile: preserve the original 40dvh dimensions.
+  // Desktop: preserve the larger desktop dimensions.
+  const sizeClasses = isMini
+    ? "h-[220px] min-h-[220px] max-h-[220px] lg:h-[230px] lg:min-h-[230px] lg:max-h-[230px]"
+    : "h-[calc(40dvh+64px)] min-h-[284px] max-h-[484px] lg:h-[calc(min(30vw,525px)+64px)] lg:min-h-0 lg:max-h-none";
 
   return (
     <>
-      <div
-        aria-hidden="true"
-        className="h-[40dvh] min-h-[220px] max-h-[420px] lg:h-[min(30vw,70dvh)] lg:min-h-0 lg:max-h-none"
-      />
-
       <section
-        className={`fixed inset-x-0 z-30 h-[40dvh] min-h-[220px] max-h-[420px] border-b border-border bg-background p-2 shadow-2xl transition-all duration-200 lg:h-[min(30vw,70dvh)] lg:min-h-0 lg:max-h-none ${
+        data-floating-video
+        className={`sticky z-30 w-full border-b border-border bg-background shadow-2xl transition-[height,top] duration-300 ${
           isHeaderHidden ? "top-0" : "top-16"
-        }`}
+        } ${sizeClasses}`}
       >
-        <div className="mx-auto flex h-full max-w-6xl flex-col">
-          <div className="flex min-h-0 flex-1 items-center justify-center overflow-hidden rounded-sm bg-primary p-1 lg:p-2">
-            <div className="relative h-full aspect-video max-w-full">
+        <div className="mx-auto flex h-full w-full max-w-6xl flex-col gap-2 overflow-hidden p-2">
+          {/* VIDEO */}
+
+          <div className="flex min-h-0 flex-1 items-center justify-center overflow-hidden rounded-lg bg-primary p-1 lg:p-2">
+            <div
+              className={`relative aspect-video shrink-0 max-h-full ${
+                isMini
+                  ? "h-full w-auto max-w-[50%] lg:max-w-[50%]"
+                  : "h-full w-full lg:w-auto lg:max-w-full"
+              }`}
+            >
               <iframe
                 key={videoTeam}
-                className="absolute inset-0 h-full w-full rounded-sm border-0"
+                className="absolute inset-0 h-full w-full rounded-md border-0"
                 src={`https://www.youtube.com/embed/videoseries?list=${PLAYLISTS[videoTeam]}`}
                 title={`La Vuelta Del Play - ${TEAM_NAMES[videoTeam]}`}
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
@@ -106,72 +85,55 @@ export default function FloatingVideo() {
             </div>
           </div>
 
-          <div className="flex shrink-0 flex-wrap items-center justify-between gap-3 bg-surface-overlay px-4 py-2 sm:px-6">
-            <div className="flex min-w-0 items-center gap-3">
-              <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-primary text-2xl text-on-primary">
+          {/* CONTROLS */}
+
+          <div className="flex shrink-0 items-center justify-between gap-2 rounded-lg bg-surface-overlay px-2 py-2 sm:px-4">
+            {/* TEAM INFORMATION */}
+
+            <div className="flex min-w-0 items-center gap-2">
+              <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-primary text-xl text-on-primary">
                 {isVideoAguilas ? "🇩🇴" : "🇺🇸"}
               </div>
 
               <div className="min-w-0">
-                <p className="text-sm font-extrabold text-white">
+                <p className="truncate text-xs font-extrabold text-white sm:text-sm">
                   {TEAM_NAMES[videoTeam]}
                 </p>
 
-                <p className="text-xs text-muted">
+                <p className="truncate text-[10px] text-muted sm:text-xs">
                   {isVideoAguilas ? "KQ94.5" : "Major League Baseball podcasts"}
-                </p>
-
-                <p className="text-[10px] text-secondary">
-                  Episodio más reciente
                 </p>
               </div>
             </div>
 
-            <div className="ml-auto grid w-full shrink-0 grid-cols-2 grid-rows-[auto_0.15fr] gap-2 text-secondary sm:flex sm:w-auto sm:items-center sm:justify-end">
+            {/* ACTIONS */}
+
+            <div className="flex shrink-0 items-center gap-2">
               <button
                 type="button"
-                onClick={handleBroadcastChange}
-                disabled={!isSelectedTeamDifferent}
-                aria-hidden={!isSelectedTeamDifferent}
-                tabIndex={isSelectedTeamDifferent ? 0 : -1}
-                className={`col-span-2 rounded-lg border border-primary px-3 py-2 text-xs font-extrabold transition-colors duration-200 sm:col-span-1 ${
-                  isSelectedTeamDifferent
-                    ? "hover:bg-primary-hover hover:text-on-primary"
-                    : "invisible pointer-events-none"
-                }`}
+                onClick={handleTeamChange}
+                className="rounded-lg border border-primary px-3 py-2 text-[10px] font-extrabold text-white transition-colors hover:bg-primary-hover sm:text-xs"
               >
-                CAMBIAR TRANSMISIÓN →
+                {videoTeam === "aguilas" ? "🇺🇸 YANKEES" : "🇩🇴 ÁGUILAS"}
               </button>
 
               <button
                 type="button"
-                onClick={() => handleInformationTeamChange("aguilas")}
-                aria-pressed={selectedTeam === "aguilas"}
-                className={`rounded-lg px-3 py-2 text-xs font-extrabold transition-colors ${
-                  selectedTeam === "aguilas"
-                    ? "bg-primary text-on-primary"
-                    : "border border-border text-white"
-                }`}
+                onClick={() => setIsMini((previous) => !previous)}
+                aria-label={isMini ? "Maximizar video" : "Minimizar video"}
+                aria-pressed={isMini}
+                className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-accent text-accent transition-colors hover:bg-accent hover:text-background"
               >
-                🇩🇴 ÁGUILAS
-              </button>
-
-              <button
-                type="button"
-                onClick={() => handleInformationTeamChange("yankees")}
-                aria-pressed={selectedTeam === "yankees"}
-                className={`rounded-lg px-3 py-2 text-xs font-extrabold transition-colors ${
-                  selectedTeam === "yankees"
-                    ? "bg-primary text-on-primary"
-                    : "border border-border text-white"
-                }`}
-              >
-                🇺🇸 YANKEES
+                {isMini ? "⛶" : "⊖"}
               </button>
             </div>
           </div>
         </div>
       </section>
+
+      {/* WEBSITE CONTENT */}
+
+      <div className="font-athletic">{children}</div>
     </>
   );
 }

@@ -101,7 +101,7 @@ export default function Standings() {
 
   return (
     <section className="mt-8">
-      <div className="mb-4">
+      <div id="posiciones" className="mb-4">
         <p className="text-md font-bold font-logo uppercase tracking-widest text-accent">
           La temporada
         </p>

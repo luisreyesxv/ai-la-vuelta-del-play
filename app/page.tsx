@@ -10,11 +10,11 @@ export default function Home() {
           <Scoreboard />
         </section>
 
-        <section id="posiciones" className="scroll-mt-20 px-4 pt-8 sm:px-6">
+        <section className="scroll-mt-20 px-4 pt-8 sm:px-6">
           <Standings />
         </section>
 
-        <section id="juegos" className="scroll-mt-20 px-4 pt-8 sm:px-6">
+        <section className="scroll-mt-20 px-4 pt-8 sm:px-6">
           <Schedule />
         </section>
 

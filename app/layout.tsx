@@ -2,11 +2,10 @@ import type { Metadata, Viewport } from "next";
 import { Nunito_Sans, Oswald } from "next/font/google";
 import localFont from "next/font/local";
 
-import Link from "next/link";
-
 import "./globals.css";
 
 import FloatingVideo from "@/components/broadcast/FloatingVideo";
+import BottomNav from "@/components/layout/BottomNav";
 import Footer from "@/components/layout/Footer";
 
 import { TeamProvider } from "@/contexts/TeamContext";
@@ -64,6 +63,35 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  function scrollToSection(
+    event: React.MouseEvent<HTMLAnchorElement>,
+    id: string,
+  ) {
+    event.preventDefault();
+
+    const target = document.getElementById(id);
+    const video = document.querySelector("[data-floating-video]");
+
+    if (!target) return;
+
+    const videoBottom = video ? video.getBoundingClientRect().bottom : 0;
+
+    const margin = 28;
+
+    const targetPosition =
+      target.getBoundingClientRect().top +
+      window.scrollY -
+      videoBottom -
+      margin;
+
+    window.scrollTo({
+      top: Math.max(0, targetPosition),
+      behavior: "smooth",
+    });
+
+    window.history.replaceState(null, "", `/#${id}`);
+  }
+
   return (
     <html lang="es">
       <body
@@ -94,10 +122,13 @@ export default function RootLayout({
             </div>
           </header>
 
-          <FloatingVideo />
-          <div className="font-athletic">{children}</div>
-          <Footer />
-          <nav className="fixed inset-x-0 bottom-0 z-50 border-t border-border bg-surface-overlay/95 pb-[env(safe-area-inset-bottom)] backdrop-blur">
+          <FloatingVideo>
+            <>
+              {children}
+              <Footer />
+            </>
+          </FloatingVideo>
+          {/* <nav className="fixed inset-x-0 bottom-0 z-50 border-t border-border bg-surface-overlay/95 pb-[env(safe-area-inset-bottom)] backdrop-blur">
             <div className="mx-auto grid h-16 max-w-lg grid-cols-4">
               <Link
                 href="/#"
@@ -128,7 +159,8 @@ export default function RootLayout({
                 <span className="text-[10px] font-bold">Juegos</span>
               </Link>
             </div>
-          </nav>
+          </nav> */}
+          <BottomNav />
         </TeamProvider>
       </body>
     </html>

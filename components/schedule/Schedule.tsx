@@ -129,8 +129,8 @@ export default function Schedule() {
   }
 
   return (
-    <section className="mt-10">
-      <div className="mb-4">
+    <section id="juegos" className="mt-10">
+      <div className="mb-4 ">
         <p className="text-xs font-bold uppercase tracking-widest text-accent">
           Nuestro equipo
         </p>
