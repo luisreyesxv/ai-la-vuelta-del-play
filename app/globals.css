@@ -3,25 +3,31 @@
 /* =========================================
    LA VUELTA DEL PLAY
    GLOBAL DESIGN SYSTEM
+   Tailwind CSS 4
 ========================================= */
 
 /* =========================================
-   1. BASE DESIGN TOKENS
+   1. SHARED APPLICATION TOKENS
 ========================================= */
 
 :root {
-  /* Backgrounds */
-  --color-background: #111111;
-  --color-surface: #242424;
-  --color-surface-elevated: #303030;
+  color-scheme: dark;
 
-  /* Text */
-  --color-foreground: #ffffff;
-  --color-secondary: #d8d8d8;
-  --color-muted: #999999;
+  /* Shared backgrounds */
+  --app-background: #111111;
+  --app-surface: #242424;
+  --app-surface-elevated: #303030;
+  --app-surface-overlay: #181818;
+
+  /* Shared text */
+  --app-foreground: #ffffff;
+  --app-secondary: #d8d8d8;
+  --app-muted: #999999;
+  --app-subtle: #777777;
 
   /* Borders */
-  --color-border: #3a3a3a;
+  --app-border: #3a3a3a;
+  --app-border-subtle: #303030;
 
   /* Typography */
   --font-heading: var(--font-oswald);
@@ -31,12 +37,12 @@
   --header-height: 64px;
   --content-max-width: 1200px;
 
-  /* Default theme */
-  color-scheme: dark;
+  /* Transitions */
+  --theme-transition: 250ms ease;
 }
 
 /* =========================================
-   2. ÁGUILAS THEME
+   2. ÁGUILAS CIBAEÑAS THEME
 ========================================= */
 
 :root,
@@ -44,51 +50,68 @@
   --team-primary: #f5c400;
   --team-primary-hover: #e9a900;
   --team-primary-muted: #806600;
-  --team-secondary: #111111;
-  --team-accent: #e9a900;
-  --team-text: #ffffff;
 
+  --team-secondary: #111111;
+  --team-accent: #f28c00;
+
+  --team-text: #ffffff;
+  --team-on-primary: #111111;
+
+  --team-background: #111111;
   --team-background-gradient: #29230c;
-  --color-background: #111111;
   --team-card-border: #806600;
+
+  --team-glow: #f5c400;
+  --team-selection: #f5c400;
+
+  --app-background: #111111;
+  --app-surface: #242424;
+  --app-surface-elevated: #303030;
+  --app-surface-overlay: #181818;
+
+  --app-border: #3a3a3a;
 }
 
 /* =========================================
-   3. YANKEES THEME
+   3. NEW YORK YANKEES THEME
 ========================================= */
 
-/* :root[data-team="yankees"] {
-  --team-primary: #5b9bd5;
-  --team-primary-hover: #78b5e8;
-  --team-primary-muted: #1a3d78;
-  --team-secondary: #c4ced4;
-  --team-accent: #e4002b;
-  --color-background: #0b111b;
-  --team-background-gradient: #0c1629;
-  --team-text: black;
-  --team-card-border: #1a3d78;
-} */
-
 :root[data-team="yankees"] {
-  --team-primary: #1557b8;
+  /* Yankees-inspired navy and blue */
+  --team-primary: #1d4e89;
   --team-primary-hover: #347de0;
   --team-primary-muted: #294e7d;
-  --team-secondary: #252b35;
-  --team-accent: #a9b9cf;
-  --team-text: #dde3ec;
 
-  --team-background-gradient: linear-gradient(
-    135deg,
-    #18283d 0%,
-    #263d59 50%,
-    #17263a 100%
-  );
-  --color-background: #1c2736;
-  --team-card-border: #526a88;
+  --team-secondary: #c5ceda;
+  --team-accent: #80a9d6;
+
+  --team-text: #ffffff;
+  --team-on-primary: #ffffff;
+
+  --team-background: #0b1426;
+  --team-background-gradient: #14233b;
+  --team-card-border: #344d6d;
+
+  --team-glow: #347de0;
+  --team-selection: #80a9d6;
+
+  /* Entire application changes */
+  --app-background: #0b1426;
+  --app-surface: #142033;
+  --app-surface-elevated: #1c2d45;
+  --app-surface-overlay: #101c30;
+
+  --app-foreground: #ffffff;
+  --app-secondary: #c5ceda;
+  --app-muted: #a9b8ca;
+  --app-subtle: #8799b0;
+
+  --app-border: #34465e;
+  --app-border-subtle: #263950;
 }
 
 /* =========================================
-   4. TAILWIND THEME MAPPING
+   4. TAILWIND CSS 4 THEME MAPPING
 ========================================= */
 
 @theme inline {
@@ -96,33 +119,37 @@
   --color-primary: var(--team-primary);
   --color-primary-hover: var(--team-primary-hover);
   --color-primary-muted: var(--team-primary-muted);
+
   --color-team-secondary: var(--team-secondary);
   --color-accent: var(--team-accent);
   --color-on-primary: var(--team-on-primary);
 
   /* Backgrounds */
-  --color-background: var(--color-background);
+  --color-background: var(--app-background);
   --color-background-gradient: var(--team-background-gradient);
-  --color-surface: var(--color-surface);
-  --color-surface-elevated: var(--color-surface-elevated);
+  --color-surface: var(--app-surface);
+  --color-surface-elevated: var(--app-surface-elevated);
+  --color-surface-overlay: var(--app-surface-overlay);
 
   /* Text */
   --color-primary-text: var(--team-text);
-  --color-foreground: var(--color-foreground);
-  --color-secondary: var(--color-secondary);
-  --color-muted: var(--color-muted);
+  --color-foreground: var(--app-foreground);
+  --color-secondary: var(--app-secondary);
+  --color-muted: var(--app-muted);
+  --color-subtle: var(--app-subtle);
 
   /* Borders */
-  --color-border: var(--color-border);
+  --color-border: var(--app-border);
+  --color-border-subtle: var(--app-border-subtle);
   --color-team-border: var(--team-card-border);
 
   /* Fonts */
-  --font-heading: var(--font-heading);
-  --font-body: var(--font-body);
+  --font-heading: var(--font-oswald);
+  --font-body: var(--font-nunito);
 }
 
 /* =========================================
-   5. RESET AND BASE STYLES
+   5. GLOBAL RESET
 ========================================= */
 
 * {
@@ -131,24 +158,46 @@
 
 html {
   min-height: 100%;
-  background: var(--color-background);
+  background-color: var(--app-background);
+
   scroll-behavior: smooth;
   scroll-padding-top: 80px;
   scroll-padding-bottom: 80px;
+
+  transition: background-color var(--theme-transition);
 }
 
 body {
   min-height: 100vh;
   margin: 0;
+
   overflow-x: clip;
 
-  background: var(--color-background);
-  color: var(--color-foreground);
+  background-color: var(--app-background);
+
+  background-image: radial-gradient(
+    ellipse at 50% 0%,
+    color-mix(in srgb, var(--team-glow) 7%, transparent),
+    transparent 55%
+  );
+
+  background-attachment: fixed;
+
+  color: var(--app-foreground);
 
   font-family: var(--font-body), sans-serif;
+
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+
+  transition:
+    background-color var(--theme-transition),
+    color var(--theme-transition);
 }
+
+/* =========================================
+   6. BASE ELEMENTS
+========================================= */
 
 button,
 input,
@@ -159,15 +208,12 @@ select {
 
 button {
   cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
 }
 
 a {
   color: inherit;
   text-decoration: none;
-  -webkit-tap-highlight-color: transparent;
-}
-
-button {
   -webkit-tap-highlight-color: transparent;
 }
 
@@ -182,7 +228,7 @@ iframe {
 }
 
 /* =========================================
-   6. TYPOGRAPHY
+   7. TYPOGRAPHY
 ========================================= */
 
 h1,
@@ -192,6 +238,7 @@ h4,
 h5,
 h6 {
   margin: 0;
+
   font-family: var(--font-heading), sans-serif;
   font-weight: 600;
 }
@@ -200,36 +247,61 @@ p {
   margin: 0;
 }
 
+::selection {
+  background: var(--team-primary);
+  color: var(--team-on-primary);
+}
+
 /* =========================================
-   7. REUSABLE DESIGN UTILITIES
+   8. THEME-AWARE UTILITIES
 ========================================= */
-
-.text-primary {
-  color: var(--team-primary);
-}
-
-.text-secondary {
-  color: var(--color-secondary);
-}
-
-.text-muted {
-  color: var(--color-muted);
-}
-
-.bg-surface {
-  background-color: var(--color-surface);
-}
-
-.bg-surface-elevated {
-  background-color: var(--color-surface-elevated);
-}
 
 .brand-gradient {
   background: linear-gradient(135deg, var(--team-primary), var(--team-accent));
 }
 
+.team-gradient {
+  background: linear-gradient(
+    135deg,
+    var(--team-primary-muted),
+    var(--team-primary),
+    var(--team-accent)
+  );
+}
+
+.team-border {
+  border-color: var(--team-card-border);
+}
+
+.team-glow {
+  box-shadow: 0 0 24px color-mix(in srgb, var(--team-primary) 15%, transparent);
+}
+
+.team-card {
+  background: var(--app-surface);
+  border: 1px solid var(--team-card-border);
+  border-radius: 1rem;
+}
+
+.team-button {
+  background: var(--team-primary);
+  color: var(--team-on-primary);
+
+  transition:
+    background-color var(--theme-transition),
+    color var(--theme-transition);
+}
+
+.team-button:hover {
+  background: var(--team-primary-hover);
+}
+
+.text-team {
+  color: var(--team-primary);
+}
+
 /* =========================================
-   8. ACCESSIBILITY
+   9. ACCESSIBILITY
 ========================================= */
 
 :focus-visible {
@@ -237,17 +309,81 @@ p {
   outline-offset: 3px;
 }
 
-::selection {
-  background: var(--team-primary);
-  color: var(--team-on-primary);
+button:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+  }
 }
 
 /* =========================================
-   9. MOTION PREFERENCES
+   SEMANTIC COMPONENT UTILITIES
 ========================================= */
 
-@media (prefers-reduced-motion: no-preference) {
-  html {
-    scroll-behavior: smooth;
-  }
+.app-card {
+  background: var(--app-surface);
+  border: 1px solid var(--app-border);
+  border-radius: 1rem;
+}
+
+.app-card-elevated {
+  background: var(--app-surface-elevated);
+  border: 1px solid var(--app-border);
+  border-radius: 1rem;
+}
+
+.app-overlay {
+  background: var(--app-surface-overlay);
+}
+
+.app-muted {
+  color: var(--app-muted);
+}
+
+.app-secondary {
+  color: var(--app-secondary);
+}
+
+.app-border {
+  border-color: var(--app-border);
+}
+
+.team-action {
+  background: var(--team-primary);
+  color: var(--team-on-primary);
+  border: 1px solid var(--team-primary);
+  transition: all 200ms ease;
+}
+
+.team-action:hover {
+  background: var(--team-primary-hover);
+  border-color: var(--team-primary-hover);
+}
+
+.team-action-outline {
+  background: transparent;
+  color: var(--team-primary);
+  border: 1px solid var(--team-primary-muted);
+}
+
+.team-action-outline:hover {
+  background: color-mix(in srgb, var(--team-primary) 12%, transparent);
+}
+
+.team-highlight {
+  color: var(--team-primary);
+}
+
+.team-status-surface {
+  background: color-mix(in srgb, var(--team-primary) 10%, var(--app-surface));
+  border: 1px solid var(--team-card-border);
 }

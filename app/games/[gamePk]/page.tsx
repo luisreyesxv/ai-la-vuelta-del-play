@@ -124,14 +124,14 @@ export default function GameDetailsPage({ params }: Props) {
             Información no disponible
           </h1>
 
-          <p className="mt-4 text-sm leading-6 text-[#999999]">
+          <p className="mt-4 text-sm leading-6 text--muted">
             No podemos encontrar la información de este partido en este momento.
             Por favor, intenta nuevamente más tarde.
           </p>
 
           <button
             onClick={() => router.back()}
-            className="mt-7 rounded-lg bg-primary px-6 py-3 text-sm font-extrabold text-black"
+            className="mt-7 rounded-lg bg-primary px-6 py-3 text-sm font-extrabold text-on-primary"
           >
             ← VOLVER
           </button>
@@ -180,13 +180,11 @@ export default function GameDetailsPage({ params }: Props) {
           {game.away.team.name} VS {game.home.team.name}
         </h1>
 
-        <p className="mt-2 text-sm capitalize text-[#999999]">
-          {formattedDate}
-        </p>
+        <p className="mt-2 text-sm capitalize text--muted">{formattedDate}</p>
 
         {/* SCORE */}
 
-        <section className="mt-6 rounded-2xl border border-primary-muted bg-gradient-to-br from-(--color-background-gradient) to-[#191919] p-5">
+        <section className="mt-6 rounded-2xl border border-primary-muted bg-gradient-to-br from-(--color-background-gradient) to-surface-overlay p-5">
           <p className="mb-5 text-center text-xs font-extrabold tracking-widest text-primary">
             {isFinal ? "FINAL" : (game.status.description ?? "PARTIDO")}
           </p>
@@ -205,7 +203,7 @@ export default function GameDetailsPage({ params }: Props) {
           ))}
 
           {game.venue && (
-            <p className="mt-3 border-t border-white/10 pt-4 text-xs text-[#999999]">
+            <p className="mt-3 border-t border-white/10 pt-4 text-xs text--muted">
               📍 {game.venue}
             </p>
           )}
@@ -214,14 +212,14 @@ export default function GameDetailsPage({ params }: Props) {
         {/* GAME DECISIONS */}
 
         {isFinal && boxscore && (
-          <section className="mt-6 rounded-2xl border border-[#3a3a3a] bg-[#242424] p-5">
+          <section className="mt-6 rounded-2xl border border-border bg-surface p-5">
             <h2 className="mb-5 text-sm font-extrabold uppercase tracking-widest text-primary">
               Decisiones del partido
             </h2>
 
             <div className="grid grid-cols-2 gap-4 mt-6">
-              <div className="rounded-xl border border-[#3a3a3a] bg-[#242424] p-4">
-                <p className="text-xs font-bold uppercase text-[#999999]">
+              <div className="rounded-xl border border-border bg-surface p-4">
+                <p className="text-xs font-bold uppercase text--muted">
                   Pitcher ganador
                 </p>
 
@@ -230,8 +228,8 @@ export default function GameDetailsPage({ params }: Props) {
                 </p>
               </div>
 
-              <div className="rounded-xl border border-[#3a3a3a] bg-[#242424] p-4">
-                <p className="text-xs font-bold uppercase text-[#999999]">
+              <div className="rounded-xl border border-border bg-surface p-4">
+                <p className="text-xs font-bold uppercase text--muted">
                   Pitcher perdedor
                 </p>
 
@@ -242,7 +240,7 @@ export default function GameDetailsPage({ params }: Props) {
             </div>
 
             {savePitcher?.fullName && (
-              <div className="mt-4 rounded-xl bg-[#191919] p-4">
+              <div className="mt-4 rounded-xl bg-surface-overlay p-4">
                 <p className="text-xs font-bold uppercase text-primary">
                   Juego salvado
                 </p>
@@ -254,7 +252,7 @@ export default function GameDetailsPage({ params }: Props) {
 
         {/* NAVIGATION */}
 
-        <div className="sticky z-20 mt-8 overflow-x-auto border-b border-[#3a3a3a] bg-background">
+        <div className="sticky z-20 mt-8 overflow-x-auto border-b border-border bg-background">
           <div className="flex min-w-max">
             {tabs.map((tab) => (
               <button
@@ -263,7 +261,7 @@ export default function GameDetailsPage({ params }: Props) {
                 className={`border-b-2 px-4 py-4 text-xs font-extrabold uppercase transition-colors ${
                   activeTab === tab.id
                     ? "border-primary text-primary"
-                    : "border-transparent text-[#777777]"
+                    : "border-transparent text-subtle"
                 }`}
               >
                 {tab.label}
@@ -281,7 +279,7 @@ export default function GameDetailsPage({ params }: Props) {
             </h2>
 
             {game.inning?.scores?.length ? (
-              <div className="overflow-x-auto rounded-xl border border-[#3a3a3a] bg-[#242424]">
+              <div className="overflow-x-auto rounded-xl border border-border bg-surface">
                 <table className="w-full text-center text-sm">
                   <thead className="text-primary">
                     <tr>
@@ -319,7 +317,7 @@ export default function GameDetailsPage({ params }: Props) {
                 </table>
               </div>
             ) : (
-              <p className="rounded-xl bg-[#242424] p-4 text-sm text-[#999999]">
+              <p className="rounded-xl bg-surface p-4 text-sm text--muted">
                 Resultados por entrada no disponibles.
               </p>
             )}
@@ -335,11 +333,11 @@ export default function GameDetailsPage({ params }: Props) {
             </h2>
 
             {boxscoreLoading && (
-              <p className="text-sm text-[#999999]">Cargando estadísticas...</p>
+              <p className="text-sm text--muted">Cargando estadísticas...</p>
             )}
 
             {!boxscoreLoading && !boxscore && (
-              <p className="rounded-xl bg-[#242424] p-4 text-sm text-[#999999]">
+              <p className="rounded-xl bg-surface p-4 text-sm text--muted">
                 Las estadísticas no están disponibles.
               </p>
             )}
@@ -356,7 +354,7 @@ export default function GameDetailsPage({ params }: Props) {
                       {label}
                     </h3>
 
-                    <div className="overflow-x-auto rounded-xl border border-[#3a3a3a] bg-[#242424]">
+                    <div className="overflow-x-auto rounded-xl border border-border bg-surface">
                       <table className="w-full text-center text-xs">
                         <thead className="text-primary">
                           <tr>
@@ -402,7 +400,7 @@ export default function GameDetailsPage({ params }: Props) {
 
                           {players.length === 0 && (
                             <tr>
-                              <td colSpan={11} className="p-4 text-[#999999]">
+                              <td colSpan={11} className="p-4 text--muted">
                                 Estadísticas no disponibles.
                               </td>
                             </tr>
@@ -436,7 +434,7 @@ export default function GameDetailsPage({ params }: Props) {
                       {label}
                     </h3>
 
-                    <div className="overflow-x-auto rounded-xl border border-[#3a3a3a] bg-[#242424]">
+                    <div className="overflow-x-auto rounded-xl border border-border bg-surface">
                       <table className="w-full text-center text-xs">
                         <thead className="text-primary">
                           <tr>
@@ -478,7 +476,7 @@ export default function GameDetailsPage({ params }: Props) {
 
                           {players.length === 0 && (
                             <tr>
-                              <td colSpan={9} className="p-4 text-[#999999]">
+                              <td colSpan={9} className="p-4 text--muted">
                                 Estadísticas no disponibles.
                               </td>
                             </tr>
@@ -491,11 +489,11 @@ export default function GameDetailsPage({ params }: Props) {
               })}
 
             {boxscoreLoading && (
-              <p className="text-sm text-[#999999]">Cargando estadísticas...</p>
+              <p className="text-sm text--muted">Cargando estadísticas...</p>
             )}
 
             {!boxscoreLoading && !boxscore && (
-              <p className="text-sm text-[#999999]">
+              <p className="text-sm text--muted">
                 Estadísticas no disponibles.
               </p>
             )}

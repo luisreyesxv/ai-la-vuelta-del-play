@@ -87,7 +87,7 @@ export default function FloatingVideo() {
       />
 
       <section
-        className={`fixed inset-x-0 z-30 h-[40dvh] min-h-[220px] max-h-[420px] border-b border-[#3a3a3a] bg-background p-2 shadow-2xl transition-all duration-200 lg:h-[min(30vw,70dvh)] lg:min-h-0 lg:max-h-none ${
+        className={`fixed inset-x-0 z-30 h-[40dvh] min-h-[220px] max-h-[420px] border-b border-border bg-background p-2 shadow-2xl transition-all duration-200 lg:h-[min(30vw,70dvh)] lg:min-h-0 lg:max-h-none ${
           isHeaderHidden ? "top-0" : "top-16"
         }`}
       >
@@ -106,9 +106,9 @@ export default function FloatingVideo() {
             </div>
           </div>
 
-          <div className="flex shrink-0 flex-wrap items-center justify-between gap-3 bg-[#181818] px-4 py-2 sm:px-6">
+          <div className="flex shrink-0 flex-wrap items-center justify-between gap-3 bg-surface-overlay px-4 py-2 sm:px-6">
             <div className="flex min-w-0 items-center gap-3">
-              <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-primary text-lg text-black">
+              <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-primary text-lg text-on-primary">
                 ⚾
               </div>
 
@@ -117,37 +117,40 @@ export default function FloatingVideo() {
                   {TEAM_NAMES[videoTeam]}
                 </p>
 
-                <p className="text-xs text-[#999999]">
+                <p className="text-xs text--muted">
                   {isVideoAguilas
                     ? "Béisbol dominicano"
                     : "Major League Baseball"}
                 </p>
 
-                <p className="text-[10px] text-primary">Transmisión actual</p>
+                <p className="text-[10px] text-secondary">Transmisión actual</p>
               </div>
             </div>
 
-            <div className="flex shrink-0 flex-wrap gap-2 text-primary">
-              {isSelectedTeamDifferent && (
-                <button
-                  type="button"
-                  onClick={handleBroadcastChange}
-                  className="w-full rounded-lg border border-primary px-3 py-2 text-xs 
-                  font-extrabold transition-colors duration-200
-                   hover:border-red-500 hover:text-red-500 sm:w-auto
-"
-                >
-                  CAMBIAR TRANSMISIÓN →
-                </button>
-              )}
+            <div className="ml-auto grid w-full shrink-0 grid-cols-2 grid-rows-[auto_0.15fr] gap-2 text-secondary sm:flex sm:w-auto sm:items-center sm:justify-end">
+              <button
+                type="button"
+                onClick={handleBroadcastChange}
+                disabled={!isSelectedTeamDifferent}
+                aria-hidden={!isSelectedTeamDifferent}
+                tabIndex={isSelectedTeamDifferent ? 0 : -1}
+                className={`col-span-2 rounded-lg border border-primary px-3 py-2 text-xs font-extrabold transition-colors duration-200 sm:col-span-1 ${
+                  isSelectedTeamDifferent
+                    ? "hover:bg-primary-hover hover:text-on-primary"
+                    : "invisible pointer-events-none"
+                }`}
+              >
+                CAMBIAR TRANSMISIÓN →
+              </button>
+
               <button
                 type="button"
                 onClick={() => handleInformationTeamChange("aguilas")}
                 aria-pressed={selectedTeam === "aguilas"}
                 className={`rounded-lg px-3 py-2 text-xs font-extrabold transition-colors ${
                   selectedTeam === "aguilas"
-                    ? "bg-primary text-black"
-                    : "border border-[#444444] text-white"
+                    ? "bg-primary text-on-primary"
+                    : "border border-border text-white"
                 }`}
               >
                 🦅 ÁGUILAS
@@ -159,8 +162,8 @@ export default function FloatingVideo() {
                 aria-pressed={selectedTeam === "yankees"}
                 className={`rounded-lg px-3 py-2 text-xs font-extrabold transition-colors ${
                   selectedTeam === "yankees"
-                    ? "bg-primary text-black"
-                    : "border border-[#444444] text-white"
+                    ? "bg-primary text-on-primary"
+                    : "border border-border text-white"
                 }`}
               >
                 ⚾ YANKEES

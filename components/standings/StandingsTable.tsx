@@ -9,7 +9,7 @@ interface StandingsTableProps {
 
 export default function StandingsTable({ standings }: StandingsTableProps) {
   return (
-    <div className="overflow-hidden rounded-xl border border-[#3a3a3a] bg-[#242424]">
+    <div className="overflow-hidden rounded-xl border border-border bg-surface">
       <StandingsHeader />
 
       {standings.map((standing) => (

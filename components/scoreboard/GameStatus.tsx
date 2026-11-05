@@ -27,16 +27,16 @@ export default function GameStatus({ status, description }: GameStatusProps) {
             ? "animate-pulse bg-red-500"
             : status === "final"
               ? "bg-primary"
-              : "bg-[#777777]"
+              : "bg-subtle"
         }`}
       />
 
-      <span className="text-[10px] font-extrabold tracking-widest text-[#d8d8d8]">
+      <span className="text-[10px] font-extrabold tracking-widest text--secondary">
         {STATUS_LABELS[status]}
       </span>
 
       {description && status === "delayed" && (
-        <span className="text-[10px] text-[#999999]">{description}</span>
+        <span className="text-[10px] text--muted">{description}</span>
       )}
     </div>
   );

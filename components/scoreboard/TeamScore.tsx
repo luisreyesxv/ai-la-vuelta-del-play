@@ -22,13 +22,13 @@ export default function TeamScore({ data, isAguilas, isHome }: TeamScoreProps) {
         <div className="min-w-0">
           <p
             className={`truncate text-sm font-extrabold ${
-              isAguilas ? "text-primary" : "text-white"
+              isAguilas ? "text-accent" : "text-white"
             }`}
           >
             {data.team.name}
           </p>
 
-          <p className="mt-1 text-[9px] font-bold uppercase tracking-widest text-[#888888]">
+          <p className="mt-1 text-[9px] font-bold uppercase tracking-widest text-muted">
             {isHome ? "LOCAL" : "VISITANTE"}
           </p>
         </div>
@@ -49,11 +49,11 @@ export default function TeamScore({ data, isAguilas, isHome }: TeamScoreProps) {
             { label: "E", value: data.score?.errors },
           ].map((stat) => (
             <div key={stat.label} className="flex items-center gap-2">
-              <span className="text-[9px] font-bold tracking-widest text-[#777777]">
+              <span className="text-[9px] font-bold tracking-widest text-subtle">
                 {stat.label}
               </span>
 
-              <span className="text-sm font-bold tabular-nums text-[#d8d8d8]">
+              <span className="text-sm font-bold tabular-nums text--secondary">
                 {stat.value ?? "—"}
               </span>
             </div>

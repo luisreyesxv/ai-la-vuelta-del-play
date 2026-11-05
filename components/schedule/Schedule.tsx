@@ -113,7 +113,7 @@ export default function Schedule() {
 
   if (loading) {
     return (
-      <section className="py-8 text-center text-sm text-[#999999]">
+      <section className="py-8 text-center text-sm text--muted">
         Cargando calendario de {teamName}...
       </section>
     );
@@ -130,7 +130,7 @@ export default function Schedule() {
   return (
     <section className="mt-10">
       <div className="mb-4">
-        <p className="text-xs font-bold uppercase tracking-widest text-primary">
+        <p className="text-xs font-bold uppercase tracking-widest text-accent">
           Nuestro equipo
         </p>
 
@@ -138,16 +138,16 @@ export default function Schedule() {
           Calendario {teamName}
         </h2>
 
-        <p className="mt-1 text-xs text-[#999999]">
+        <p className="mt-1 text-xs text--muted">
           Sigue cada paso de {teamName}.
         </p>
       </div>
 
-      <div className="mb-5 grid grid-cols-3 rounded-xl border border-[#3a3a3a] bg-[#242424] p-1">
+      <div className="mb-5 grid grid-cols-3 rounded-xl border border-border bg-surface p-1">
         <button
           onClick={() => setFilter("upcoming")}
           className={`rounded-lg py-3 text-xs font-extrabold transition-colors ${
-            filter === "upcoming" ? "bg-primary text-black" : "text-[#999999]"
+            filter === "upcoming" ? "bg-primary text-on-primary" : "text--muted"
           }`}
         >
           PRÓXIMOS ({upcomingGames.length})
@@ -156,7 +156,9 @@ export default function Schedule() {
         <button
           onClick={() => setFilter("completed")}
           className={`rounded-lg py-3 text-xs font-extrabold transition-colors ${
-            filter === "completed" ? "bg-primary text-black" : "text-[#999999]"
+            filter === "completed"
+              ? "bg-primary text-on-primary"
+              : "text--muted"
           }`}
         >
           FINALIZADOS ({completedGames.length})
@@ -165,7 +167,9 @@ export default function Schedule() {
         <button
           onClick={() => setFilter("suspended")}
           className={`rounded-lg py-3 text-xs font-extrabold transition-colors ${
-            filter === "suspended" ? "bg-primary text-black" : "text-[#999999]"
+            filter === "suspended"
+              ? "bg-primary text-on-primary"
+              : "text--muted"
           }`}
         >
           SUSPENDIDOS ({suspendedGames.length})
@@ -174,12 +178,12 @@ export default function Schedule() {
 
       <div className="space-y-3">
         {displayedGames.length === 0 && (
-          <div className="rounded-xl border border-[#3a3a3a] bg-[#242424] p-6 text-center">
+          <div className="rounded-xl border border-border bg-surface p-6 text-center">
             <p className="font-bold text-primary">
               No hay partidos disponibles.
             </p>
 
-            <p className="mt-2 text-sm text-[#999999]">
+            <p className="mt-2 text-sm text--muted">
               {filter === "upcoming"
                 ? `Próximamente tendremos más acción de ${teamName}.`
                 : filter === "completed"
@@ -196,10 +200,10 @@ export default function Schedule() {
           return (
             <article
               key={game.gamePk}
-              className="overflow-hidden rounded-xl border border-primary-muted bg-gradient-to-br from-(--color-background-gradient)] to-[#191919]"
+              className="overflow-hidden rounded-xl border border-primary-muted bg-gradient-to-br from-(--color-background-gradient)] to-surface-overlay"
             >
               <div className="flex items-center justify-between border-b border-white/10 px-4 py-3">
-                <span className="text-xs font-bold capitalize text-[#999999]">
+                <span className="text-xs font-bold capitalize text--muted">
                   {formatDate(game.gameDate)}
                 </span>
 
@@ -219,7 +223,7 @@ export default function Schedule() {
               <div className="p-4">
                 <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-3">
                   <div className="text-center">
-                    <p className="mb-2 text-[9px] font-extrabold uppercase tracking-widest text-[#999999]">
+                    <p className="mb-2 text-[9px] font-extrabold uppercase tracking-widest text--muted">
                       VISITANTE
                     </p>
 
@@ -242,12 +246,12 @@ export default function Schedule() {
                     )}
                   </div>
 
-                  <span className="font-[family-name:var(--font-oswald)] text-lg font-bold text-[#777777]">
+                  <span className="font-[family-name:var(--font-oswald)] text-lg font-bold text-subtle">
                     VS
                   </span>
 
                   <div className="text-center">
-                    <p className="mb-2 text-[9px] font-extrabold uppercase tracking-widest text-[#999999]">
+                    <p className="mb-2 text-[9px] font-extrabold uppercase tracking-widest text--muted">
                       LOCAL
                     </p>
 
@@ -279,18 +283,12 @@ export default function Schedule() {
                   </p>
 
                   <div className="grid grid-cols-[minmax(0,1fr)_repeat(3,36px)] gap-2 text-center">
-                    <span className="text-left text-[10px] text-[#777777]">
+                    <span className="text-left text-[10px] text-subtle">
                       EQUIPO
                     </span>
-                    <span className="text-[10px] font-bold text-[#999999]">
-                      R
-                    </span>
-                    <span className="text-[10px] font-bold text-[#999999]">
-                      H
-                    </span>
-                    <span className="text-[10px] font-bold text-[#999999]">
-                      E
-                    </span>
+                    <span className="text-[10px] font-bold text--muted">R</span>
+                    <span className="text-[10px] font-bold text--muted">H</span>
+                    <span className="text-[10px] font-bold text--muted">E</span>
 
                     {[game.away, game.home].map((team) => (
                       <React.Fragment key={team.team.id}>
@@ -308,11 +306,11 @@ export default function Schedule() {
                           {team.score?.runs ?? "—"}
                         </span>
 
-                        <span className="text-sm text-[#bbbbbb]">
+                        <span className="text-sm text-secondary">
                           {team.score?.hits ?? "—"}
                         </span>
 
-                        <span className="text-sm text-[#bbbbbb]">
+                        <span className="text-sm text-secondary">
                           {team.score?.errors ?? "—"}
                         </span>
                       </React.Fragment>
@@ -323,7 +321,7 @@ export default function Schedule() {
                     <div className="mt-4 overflow-x-auto">
                       <table className="w-full text-center text-xs">
                         <thead>
-                          <tr className="text-[#999999]">
+                          <tr className="text--muted">
                             <th className="py-2 text-left">INN</th>
 
                             {game.inning.scores.map((inning) => (
@@ -363,7 +361,7 @@ export default function Schedule() {
                   )}
 
                   {game.venue && (
-                    <p className="mt-4 border-t border-white/5 pt-3 text-xs text-[#999999]">
+                    <p className="mt-4 border-t border-white/5 pt-3 text-xs text--muted">
                       📍 {game.venue}
                     </p>
                   )}
@@ -372,7 +370,7 @@ export default function Schedule() {
 
               {!isFinal && game.venue && (
                 <div className="border-t border-white/10 px-4 py-3">
-                  <p className="text-xs text-[#999999]">📍 {game.venue}</p>
+                  <p className="text-xs text--muted">📍 {game.venue}</p>
                 </div>
               )}
             </article>

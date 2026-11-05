@@ -23,7 +23,7 @@ export default function GameCard({ game, teamId }: GameCardProps) {
   }).format(new Date(game.gameDate));
 
   return (
-    <article className="overflow-hidden rounded-2xl border border-primary-muted  bg-gradient-to-br from-(--color-background-gradient) to-[#191919]">
+    <article className="overflow-hidden rounded-2xl border border-primary-muted  bg-gradient-to-br from-(--color-background-gradient) to-surface-overlay">
       {/* GAME INFORMATION */}
       <div className="border-b border-white/10 px-4 py-3">
         <div className="flex items-center justify-between gap-3">
@@ -37,11 +37,9 @@ export default function GameCard({ game, teamId }: GameCardProps) {
           </span>
         </div>
 
-        <p className="mt-2 text-xs capitalize text-[#999999]">
-          {formattedDate}
-        </p>
+        <p className="mt-2 text-xs capitalize text--muted">{formattedDate}</p>
 
-        <p className="mt-1 text-xs text-[#999999]">
+        <p className="mt-1 text-xs text--muted">
           Rival: <span className="font-bold text-white">{opponent}</span>
         </p>
       </div>
@@ -62,7 +60,7 @@ export default function GameCard({ game, teamId }: GameCardProps) {
       {/* VENUE */}
       {game.venue && (
         <div className="border-t border-white/10 px-4 py-3">
-          <p className="text-xs text-[#999999]">📍 {game.venue}</p>
+          <p className="text-xs text--muted">📍 {game.venue}</p>
         </div>
       )}
     </article>

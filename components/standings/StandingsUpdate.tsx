@@ -20,9 +20,9 @@ export default function StandingsUpdate({
   return (
     <div className="flex items-center justify-between gap-3 pt-3">
       <div className="min-w-0">
-        <p className="text-[10px] text-[#999999]">Última actualización</p>
+        <p className="text-[10px] text--muted">Última actualización</p>
 
-        <p className="truncate text-xs font-bold text-[#d8d8d8]">
+        <p className="truncate text-xs font-bold text--secondary">
           {formattedDate ?? "No disponible"}
         </p>
       </div>
@@ -31,7 +31,7 @@ export default function StandingsUpdate({
         type="button"
         onClick={onRefresh}
         disabled={isRefreshing}
-        className="shrink-0 rounded-lg border border-primary-muted  px-3 py-2 text-xs font-extrabold text-primary transition-colors hover:bg-primary/10 disabled:opacity-50"
+        className="shrink-0 rounded-lg border border-primary-muted  px-3 py-2 text-xs font-extrabold text-accent transition-colors hover:bg-primary/10 disabled:opacity-50"
       >
         {isRefreshing ? "Actualizando..." : "↻ Actualizar"}
       </button>

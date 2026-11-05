@@ -110,19 +110,19 @@ export default function Standings() {
           Posiciones {LEAGUE_NAMES[selectedTeam]}
         </h2>
 
-        <p className="mt-1 text-xs text-[#999999]">
+        <p className="mt-1 text-xs text--muted">
           Así marcha {TEAM_NAMES[selectedTeam]} en su liga.
         </p>
       </div>
 
       {loading && !data && (
-        <div className="rounded-xl border border-[#3a3a3a] bg-[#242424] p-6 text-center">
-          <p className="text-sm text-[#999999]">Cargando posiciones...</p>
+        <div className="rounded-xl border border-border bg-surface p-6 text-center">
+          <p className="text-sm text--muted">Cargando posiciones...</p>
         </div>
       )}
 
       {error && !data && (
-        <div className="rounded-xl border border-[#713d28] bg-[#242424] p-5">
+        <div className="rounded-xl border border-[#713d28] bg-surface p-5">
           <p className="text-sm text-white">{error}</p>
 
           <button
@@ -145,7 +145,7 @@ export default function Standings() {
           />
 
           {error && (
-            <p className="mt-2 text-xs text-[#f28c00]">
+            <p className="mt-2 text-xs text-accent">
               {error} Mostrando los últimos datos recibidos.
             </p>
           )}
@@ -153,8 +153,8 @@ export default function Standings() {
       )}
 
       {data && data.data.standings.length === 0 && (
-        <div className="rounded-xl border border-[#3a3a3a] bg-[#242424] p-6 text-center">
-          <p className="text-sm text-[#999999]">
+        <div className="rounded-xl border border-border bg-surface p-6 text-center">
+          <p className="text-sm text--muted">
             No hay posiciones disponibles actualmente.
           </p>
         </div>

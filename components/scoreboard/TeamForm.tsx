@@ -39,7 +39,7 @@ export default function TeamForm({ games, teamId, teamName }: TeamFormProps) {
     results.length > 0 ? ((wins / results.length) * 100).toFixed(0) : "—";
 
   return (
-    <section className="mt-8 rounded-2xl border border-[#3a3a3a] bg-[#242424] p-4">
+    <section className="mt-8 rounded-2xl border border-border bg-surface p-4">
       <div className="mb-4">
         <p className="text-xs font-bold uppercase tracking-widest text-primary">
           Rendimiento reciente
@@ -49,7 +49,7 @@ export default function TeamForm({ games, teamId, teamName }: TeamFormProps) {
           Últimos 5 partidos
         </h2>
 
-        <p className="mt-1 text-xs text-[#999999]">{teamName}</p>
+        <p className="mt-1 text-xs text--muted">{teamName}</p>
       </div>
 
       <div className="flex items-center justify-between gap-3">
@@ -58,18 +58,18 @@ export default function TeamForm({ games, teamId, teamName }: TeamFormProps) {
             {wins}-{losses}
           </p>
 
-          <p className="mt-1 text-[10px] uppercase tracking-widest text-[#999999]">
+          <p className="mt-1 text-[10px] uppercase tracking-widest text--muted">
             Ganados - Perdidos
           </p>
         </div>
 
         <div className="text-right">
-          <p className="font-[family-name:var(--font-oswald)] text-3xl font-bold text-primary">
+          <p className="font-[family-name:var(--font-oswald)] text-3xl font-bold text-accent">
             {percentage}
             {percentage !== "—" ? "%" : ""}
           </p>
 
-          <p className="mt-1 text-[10px] uppercase tracking-widest text-[#999999]">
+          <p className="mt-1 text-[10px] uppercase tracking-widest text-muted">
             Victorias
           </p>
         </div>
@@ -90,7 +90,7 @@ export default function TeamForm({ games, teamId, teamName }: TeamFormProps) {
             </div>
           ))
         ) : (
-          <p className="text-xs text-[#999999]">
+          <p className="text-xs text--muted">
             No hay resultados recientes disponibles.
           </p>
         )}
