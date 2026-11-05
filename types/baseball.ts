@@ -76,7 +76,13 @@ export interface GameTeam {
 
 export interface BaseballGame {
   gamePk: number;
+
   gameDate: string;
+
+  /**
+   * Official calendar date supplied by MLB StatsAPI.
+   */
+  officialDate: string | null;
 
   status: {
     type: GameStatusType;
@@ -171,4 +177,27 @@ export interface BaseballStandingsResponse {
   data: BaseballStandings;
 
   metadata: BaseballDataMetadata;
+}
+
+/* ---------------------------------------
+   FEATURED GAME
+--------------------------------------- */
+
+export interface FeaturedGameResponse {
+  targetDate: string;
+
+  selectedTeam: "aguilas" | "yankees" | null;
+
+  selectedGame: BaseballGame | null;
+
+  recapEligible: boolean;
+
+  selectionReason:
+    | "aguilas_played_yesterday"
+    | "yankees_fallback"
+    | "no_game_yesterday";
+
+  metadata: {
+    fetchedAt: string;
+  };
 }

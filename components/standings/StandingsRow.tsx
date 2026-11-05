@@ -5,17 +5,17 @@ interface StandingRowProps {
 }
 
 export default function StandingsRow({ standing }: StandingRowProps) {
-  const isAguilas = standing.team.id === 667;
+  const isAguilas = standing.team.id === 667 || standing.team.id === 147;
 
   return (
     <div
       className={`grid grid-cols-[36px_minmax(0,1fr)_36px_36px_48px] items-center gap-2 border-b border-white/5 px-3 py-4 ${
-        isAguilas ? "bg-[#f5c400]/10" : "bg-transparent"
+        isAguilas ? "bg-primary/10" : "bg-transparent"
       }`}
     >
       <span
         className={`font-[family-name:var(--font-oswald)] text-lg font-bold ${
-          isAguilas ? "text-[#f5c400]" : "text-[#999999]"
+          isAguilas ? "text-primary" : "text-[#999999]"
         }`}
       >
         {standing.rank ?? "—"}
@@ -24,14 +24,14 @@ export default function StandingsRow({ standing }: StandingRowProps) {
       <div className="min-w-0">
         <p
           className={`truncate text-sm font-extrabold ${
-            isAguilas ? "text-[#f5c400]" : "text-white"
+            isAguilas ? "text-primary" : "text-white"
           }`}
         >
           {standing.team.name}
         </p>
 
         {isAguilas && (
-          <span className="text-[9px] font-extrabold uppercase tracking-widest text-[#e9a900]">
+          <span className="text-[9px] font-extrabold uppercase tracking-widest text-primary-hover">
             Nuestro equipo
           </span>
         )}

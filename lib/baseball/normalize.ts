@@ -102,7 +102,7 @@ export function normalizeGame(game: MLBGame): BaseballGame | null {
   return {
     gamePk: game.gamePk,
     gameDate: game.gameDate,
-
+    officialDate: game.officialDate ?? null,
     status: {
       type: normalizeStatus(
         game.status?.detailedState,
@@ -111,7 +111,6 @@ export function normalizeGame(game: MLBGame): BaseballGame | null {
       description: game.status?.detailedState ?? null,
     },
 
-    // Winning and losing pitchers
     decisions: {
       winner: game.decisions?.winner?.fullName
         ? {

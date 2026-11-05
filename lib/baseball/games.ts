@@ -1,82 +1,88 @@
 import "server-only";
 
-import { BaseballGame, BaseballGamesResponse } from "@/types/baseball";
+import type { BaseballGame, BaseballGamesResponse } from "@/types/baseball";
+import type { TeamId } from "@/contexts/TeamContext";
 
 import { getCurrentLidomSeason } from "@/lib/baseball/dates";
-
-import { getSeasonSchedule } from "@/lib/baseball/schedule";
-
+import {
+  getMLBSeasonSchedule,
+  getSeasonSchedule,
+} from "@/lib/baseball/schedule";
 import { normalizeGame } from "@/lib/baseball/normalize";
 
 import {
-  isAguilasGame,
+  TEAM_IDS,
+  isTeamGame,
   newestFirst,
-  selectAguilasGame,
+  selectTeamGame,
 } from "@/lib/baseball/game-selection";
 
 const MAX_HISTORICAL_SEASONS = 10;
 
-/**
- * Searches previous seasons for the latest completed
- * Águilas game.
- */
+function getCurrentMLBSeason(): number {
+  return new Date().getFullYear();
+}
+
+async function getTeamSeasonSchedule(
+  team: TeamId,
+  season: number,
+  historical = false,
+): Promise<BaseballGame[]> {
+  const rawGames =
+    team === "aguilas"
+      ? await getSeasonSchedule(season, historical, true)
+      : await getMLBSeasonSchedule(season, TEAM_IDS.yankees, historical);
+
+  return rawGames
+    .map(normalizeGame)
+    .filter(
+      (game): game is BaseballGame =>
+        game !== null && isTeamGame(game, TEAM_IDS[team]),
+    );
+}
+
 async function getHistoricalFallback(
+  team: TeamId,
   currentSeason: number,
 ): Promise<BaseballGame | null> {
   for (let offset = 1; offset <= MAX_HISTORICAL_SEASONS; offset++) {
     const season = currentSeason - offset;
 
-    const rawGames = await getSeasonSchedule(season, true, true);
+    const games = await getTeamSeasonSchedule(team, season, true);
 
-    const completedGames = rawGames
-      .map(normalizeGame)
-      .filter(
-        (game): game is BaseballGame =>
-          game !== null && isAguilasGame(game) && game.status.type === "final",
-      )
-      .sort(newestFirst);
+    const latest = selectTeamGame(games, TEAM_IDS[team]);
 
-    const latestGame = completedGames[0];
-
-    if (latestGame) {
-      return latestGame;
-    }
+    if (latest) return latest;
   }
 
   return null;
 }
 
-/**
- * Returns the latest completed Águilas game.
- *
- * Live and scheduled games are intentionally excluded.
- */
-export async function getBaseballGames(): Promise<BaseballGamesResponse> {
-  const season = getCurrentLidomSeason();
+export async function getBaseballGames(
+  team: TeamId = "aguilas",
+): Promise<BaseballGamesResponse> {
+  const season =
+    team === "aguilas" ? getCurrentLidomSeason() : getCurrentMLBSeason();
 
-  const currentRawGames = await getSeasonSchedule(season);
+  const games = await getTeamSeasonSchedule(team, season);
 
-  const currentGames = currentRawGames
-    .map(normalizeGame)
-    .filter(
-      (game): game is BaseballGame =>
-        game !== null && isAguilasGame(game) && game.status.type === "final",
-    )
+  const completedGames = games
+    .filter((game) => game.status.type === "final")
     .sort(newestFirst);
 
-  let selectedGame = selectAguilasGame(currentGames);
+  let selectedGame = selectTeamGame(completedGames, TEAM_IDS[team]);
 
   if (!selectedGame) {
-    selectedGame = await getHistoricalFallback(season);
+    selectedGame = await getHistoricalFallback(team, season);
 
     if (selectedGame) {
-      currentGames.push(selectedGame);
+      completedGames.push(selectedGame);
     }
   }
 
   return {
     selectedGame,
-    games: currentGames.sort(newestFirst),
+    games: completedGames.sort(newestFirst),
 
     metadata: {
       fetchedAt: new Date().toISOString(),

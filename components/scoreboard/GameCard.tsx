@@ -5,13 +5,12 @@ import TeamScore from "@/components/scoreboard/TeamScore";
 
 interface GameCardProps {
   game: BaseballGame;
+  teamId: number;
 }
 
-const AGUILAS_TEAM_ID = 667;
-
-export default function GameCard({ game }: GameCardProps) {
-  const isAguilasHome = game.home.team.id === AGUILAS_TEAM_ID;
-  const isAguilasAway = game.away.team.id === AGUILAS_TEAM_ID;
+export default function GameCard({ game, teamId }: GameCardProps) {
+  const isAguilasHome = game.home.team.id === teamId;
+  const isAguilasAway = game.away.team.id === teamId;
 
   const opponent = isAguilasHome ? game.away.team.name : game.home.team.name;
 
@@ -24,7 +23,7 @@ export default function GameCard({ game }: GameCardProps) {
   }).format(new Date(game.gameDate));
 
   return (
-    <article className="overflow-hidden rounded-2xl border border-[#806600] bg-gradient-to-br from-[#29230c] to-[#191919]">
+    <article className="overflow-hidden rounded-2xl border border-primary-muted  bg-gradient-to-br from-(--color-background-gradient) to-[#191919]">
       {/* GAME INFORMATION */}
       <div className="border-b border-white/10 px-4 py-3">
         <div className="flex items-center justify-between gap-3">
@@ -33,7 +32,7 @@ export default function GameCard({ game }: GameCardProps) {
             description={game.status.description}
           />
 
-          <span className="text-[10px] font-bold uppercase tracking-widest text-[#f5c400]">
+          <span className="text-[10px] font-bold uppercase tracking-widest text-primary">
             ÚLTIMO PARTIDO
           </span>
         </div>

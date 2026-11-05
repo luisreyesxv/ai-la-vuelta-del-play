@@ -26,7 +26,7 @@ export default function GameStatus({ status, description }: GameStatusProps) {
           isLive
             ? "animate-pulse bg-red-500"
             : status === "final"
-              ? "bg-[#f5c400]"
+              ? "bg-primary"
               : "bg-[#777777]"
         }`}
       />

@@ -2,11 +2,20 @@
 
 import React, { useEffect, useState } from "react";
 
+import { useTeam } from "@/contexts/TeamContext";
 import { BaseballGame } from "@/types/baseball";
 
 type ScheduleFilter = "upcoming" | "completed" | "suspended";
 
-const AGUILAS_TEAM_ID = 667;
+const TEAM_IDS = {
+  aguilas: 667,
+  yankees: 147,
+};
+
+const TEAM_NAMES = {
+  aguilas: "Águilas Cibaeñas",
+  yankees: "New York Yankees",
+};
 
 export default function Schedule() {
   const [games, setGames] = useState<BaseballGame[]>([]);
@@ -14,12 +23,22 @@ export default function Schedule() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
 
+  const { selectedTeam } = useTeam();
+
+  const teamId = TEAM_IDS[selectedTeam];
+  const teamName = TEAM_NAMES[selectedTeam];
+
   useEffect(() => {
+    let cancelled = false;
+
     async function fetchSchedule() {
+      setLoading(true);
+
       try {
-        const response = await fetch("/api/baseball/schedule", {
-          cache: "no-store",
-        });
+        const response = await fetch(
+          `/api/baseball/schedule?team=${selectedTeam}`,
+          { cache: "no-store" },
+        );
 
         if (!response.ok) {
           throw new Error("Unable to retrieve schedule");
@@ -27,25 +46,33 @@ export default function Schedule() {
 
         const result = await response.json();
 
-        setGames(result.games);
-        setError(false);
+        if (!cancelled) {
+          setGames(result.games);
+          setError(false);
+        }
       } catch {
-        setError(true);
+        if (!cancelled) {
+          setError(true);
+        }
       } finally {
-        setLoading(false);
+        if (!cancelled) {
+          setLoading(false);
+        }
       }
     }
 
     void fetchSchedule();
-  }, []);
 
-  const aguilasGames = games.filter(
-    (game) =>
-      game.home.team.id === AGUILAS_TEAM_ID ||
-      game.away.team.id === AGUILAS_TEAM_ID,
+    return () => {
+      cancelled = true;
+    };
+  }, [selectedTeam]);
+
+  const teamGames = games.filter(
+    (game) => game.home.team.id === teamId || game.away.team.id === teamId,
   );
 
-  const upcomingGames = aguilasGames
+  const upcomingGames = teamGames
     .filter((game) =>
       ["scheduled", "live", "delayed"].includes(game.status.type),
     )
@@ -54,14 +81,14 @@ export default function Schedule() {
     )
     .slice(0, 3);
 
-  const suspendedGames = aguilasGames
+  const suspendedGames = teamGames
     .filter((game) => game.status.type === "suspended")
     .sort(
       (a, b) => new Date(b.gameDate).getTime() - new Date(a.gameDate).getTime(),
     );
 
-  const completedGames = aguilasGames
-    .filter((game) => ["final", "delayed"].includes(game.status.type))
+  const completedGames = teamGames
+    .filter((game) => game.status.type === "final")
     .sort(
       (a, b) => new Date(b.gameDate).getTime() - new Date(a.gameDate).getTime(),
     )
@@ -87,7 +114,7 @@ export default function Schedule() {
   if (loading) {
     return (
       <section className="py-8 text-center text-sm text-[#999999]">
-        Cargando calendario de las Águilas...
+        Cargando calendario de {teamName}...
       </section>
     );
   }
@@ -103,16 +130,16 @@ export default function Schedule() {
   return (
     <section className="mt-10">
       <div className="mb-4">
-        <p className="text-xs font-bold uppercase tracking-widest text-[#f5c400]">
+        <p className="text-xs font-bold uppercase tracking-widest text-primary">
           Nuestro equipo
         </p>
 
         <h2 className="mt-1 font-[family-name:var(--font-oswald)] text-2xl font-bold uppercase">
-          Calendario Águilas
+          Calendario {teamName}
         </h2>
 
         <p className="mt-1 text-xs text-[#999999]">
-          Sigue cada paso de las Águilas Cibaeñas.
+          Sigue cada paso de {teamName}.
         </p>
       </div>
 
@@ -120,7 +147,7 @@ export default function Schedule() {
         <button
           onClick={() => setFilter("upcoming")}
           className={`rounded-lg py-3 text-xs font-extrabold transition-colors ${
-            filter === "upcoming" ? "bg-[#f5c400] text-black" : "text-[#999999]"
+            filter === "upcoming" ? "bg-primary text-black" : "text-[#999999]"
           }`}
         >
           PRÓXIMOS ({upcomingGames.length})
@@ -129,9 +156,7 @@ export default function Schedule() {
         <button
           onClick={() => setFilter("completed")}
           className={`rounded-lg py-3 text-xs font-extrabold transition-colors ${
-            filter === "completed"
-              ? "bg-[#f5c400] text-black"
-              : "text-[#999999]"
+            filter === "completed" ? "bg-primary text-black" : "text-[#999999]"
           }`}
         >
           FINALIZADOS ({completedGames.length})
@@ -140,9 +165,7 @@ export default function Schedule() {
         <button
           onClick={() => setFilter("suspended")}
           className={`rounded-lg py-3 text-xs font-extrabold transition-colors ${
-            filter === "suspended"
-              ? "bg-[#f5c400] text-black"
-              : "text-[#999999]"
+            filter === "suspended" ? "bg-primary text-black" : "text-[#999999]"
           }`}
         >
           SUSPENDIDOS ({suspendedGames.length})
@@ -152,40 +175,35 @@ export default function Schedule() {
       <div className="space-y-3">
         {displayedGames.length === 0 && (
           <div className="rounded-xl border border-[#3a3a3a] bg-[#242424] p-6 text-center">
-            <p className="font-bold text-[#f5c400]">
+            <p className="font-bold text-primary">
               No hay partidos disponibles.
             </p>
 
             <p className="mt-2 text-sm text-[#999999]">
               {filter === "upcoming"
-                ? "Próximamente tendremos más acción de las Águilas."
+                ? `Próximamente tendremos más acción de ${teamName}.`
                 : filter === "completed"
-                  ? "Todavía no hay partidos finalizados disponibles."
-                  : "No hay partidos suspendidos disponibles."}
+                  ? `Todavía no hay partidos finalizados de ${teamName}.`
+                  : `No hay partidos suspendidos de ${teamName}.`}
             </p>
           </div>
         )}
 
         {displayedGames.map((game) => {
-          const isAguilasHome = game.home.team.id === AGUILAS_TEAM_ID;
-
-          const aguilas = isAguilasHome ? game.home : game.away;
-
-          const opponent = isAguilasHome ? game.away : game.home;
-
+          const isTeamHome = game.home.team.id === teamId;
           const isFinal = game.status.type === "final";
 
           return (
             <article
               key={game.gamePk}
-              className="overflow-hidden rounded-xl border border-[#806600] bg-gradient-to-br from-[#29230c] to-[#191919]"
+              className="overflow-hidden rounded-xl border border-primary-muted bg-gradient-to-br from-(--color-background-gradient)] to-[#191919]"
             >
               <div className="flex items-center justify-between border-b border-white/10 px-4 py-3">
                 <span className="text-xs font-bold capitalize text-[#999999]">
                   {formatDate(game.gameDate)}
                 </span>
 
-                <span className="text-[10px] font-extrabold uppercase tracking-widest text-[#f5c400]">
+                <span className="text-[10px] font-extrabold uppercase tracking-widest text-primary">
                   {isFinal
                     ? "FINAL"
                     : game.status.type === "live"
@@ -200,7 +218,6 @@ export default function Schedule() {
 
               <div className="p-4">
                 <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-3">
-                  {/* VISITANTE - ALWAYS LEFT */}
                   <div className="text-center">
                     <p className="mb-2 text-[9px] font-extrabold uppercase tracking-widest text-[#999999]">
                       VISITANTE
@@ -208,7 +225,7 @@ export default function Schedule() {
 
                     <p
                       className={`text-sm font-extrabold ${
-                        !isAguilasHome ? "text-[#f5c400]" : "text-white"
+                        !isTeamHome ? "text-primary" : "text-white"
                       }`}
                     >
                       {game.away.team.name}
@@ -217,7 +234,7 @@ export default function Schedule() {
                     {isFinal && (
                       <p
                         className={`mt-1 font-[family-name:var(--font-oswald)] text-4xl font-bold ${
-                          !isAguilasHome ? "text-[#f5c400]" : "text-white"
+                          !isTeamHome ? "text-primary" : "text-white"
                         }`}
                       >
                         {game.away.score?.runs ?? "—"}
@@ -229,7 +246,6 @@ export default function Schedule() {
                     VS
                   </span>
 
-                  {/* LOCAL - ALWAYS RIGHT */}
                   <div className="text-center">
                     <p className="mb-2 text-[9px] font-extrabold uppercase tracking-widest text-[#999999]">
                       LOCAL
@@ -237,7 +253,7 @@ export default function Schedule() {
 
                     <p
                       className={`text-sm font-extrabold ${
-                        isAguilasHome ? "text-[#f5c400]" : "text-white"
+                        isTeamHome ? "text-primary" : "text-white"
                       }`}
                     >
                       {game.home.team.name}
@@ -246,7 +262,7 @@ export default function Schedule() {
                     {isFinal && (
                       <p
                         className={`mt-1 font-[family-name:var(--font-oswald)] text-4xl font-bold ${
-                          isAguilasHome ? "text-[#f5c400]" : "text-white"
+                          isTeamHome ? "text-primary" : "text-white"
                         }`}
                       >
                         {game.home.score?.runs ?? "—"}
@@ -258,7 +274,7 @@ export default function Schedule() {
 
               {isFinal && (
                 <div className="border-t border-white/10 px-4 py-3">
-                  <p className="mb-3 text-[10px] font-extrabold uppercase tracking-widest text-[#f5c400]">
+                  <p className="mb-3 text-[10px] font-extrabold uppercase tracking-widest text-primary">
                     Estadísticas finales
                   </p>
 
@@ -280,8 +296,8 @@ export default function Schedule() {
                       <React.Fragment key={team.team.id}>
                         <span
                           className={`truncate text-left text-xs font-bold ${
-                            team.team.id === AGUILAS_TEAM_ID
-                              ? "text-[#f5c400]"
+                            team.team.id === teamId
+                              ? "text-primary"
                               : "text-white"
                           }`}
                         >
@@ -327,7 +343,7 @@ export default function Schedule() {
                               key={team.label}
                               className="border-t border-white/5"
                             >
-                              <td className="py-2 text-left font-bold text-[#f5c400]">
+                              <td className="py-2 text-left font-bold text-primary">
                                 {team.label}
                               </td>
 

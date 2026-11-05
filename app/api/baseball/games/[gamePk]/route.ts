@@ -1,6 +1,14 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 
-import { fetchStatsApi, StatsApiError } from "@/lib/baseball/api";
+import {
+  fetchStatsApi,
+  StatsApiError,
+  BASEBALL_CONFIG,
+} from "@/lib/baseball/api";
+
+import type { TeamId } from "@/contexts/TeamContext";
+
+import type { MLBScheduleResponse, MLBGame } from "@/lib/baseball/mlb-types";
 
 interface RouteContext {
   params: Promise<{
@@ -8,7 +16,7 @@ interface RouteContext {
   }>;
 }
 
-export async function GET(_request: Request, { params }: RouteContext) {
+export async function GET(request: NextRequest, { params }: RouteContext) {
   try {
     const { gamePk } = await params;
     const id = Number(gamePk);
@@ -17,34 +25,42 @@ export async function GET(_request: Request, { params }: RouteContext) {
       return NextResponse.json({ error: "Invalid game ID." }, { status: 400 });
     }
 
+    const requestedTeam = request.nextUrl.searchParams.get("team") ?? "aguilas";
+
+    if (requestedTeam !== "aguilas" && requestedTeam !== "yankees") {
+      return NextResponse.json({ error: "Invalid team." }, { status: 400 });
+    }
+
+    const team = requestedTeam as TeamId;
+    const config = BASEBALL_CONFIG[team];
+
     const [boxscore, schedule] = await Promise.all([
       fetchStatsApi<Record<string, unknown>>(`/game/${id}/boxscore`, {
         revalidateSeconds: 300,
       }),
 
-      fetchStatsApi<Record<string, unknown>>("/schedule", {
+      fetchStatsApi<MLBScheduleResponse>("/schedule", {
         revalidateSeconds: 300,
         query: {
-          sportId: 1,
+          sportId: config.sportId,
+          leagueId: config.leagueId ?? undefined,
           gamePks: id,
           hydrate: "decisions",
         },
       }),
     ]);
 
-    const dates = schedule.dates as
-      | Array<{ games?: Array<Record<string, unknown>> }>
-      | undefined;
-
-    const game = dates
+    const game: MLBGame | undefined = schedule.dates
       ?.flatMap((date) => date.games ?? [])
-      .find((item) => Number(item.gamePk) === id);
+      .find((item) => item.gamePk === id);
 
-    const decisions = game?.decisions ?? {};
+    if (!game) {
+      return NextResponse.json({ error: "Game not found." }, { status: 404 });
+    }
 
     return NextResponse.json({
       ...boxscore,
-      decisions,
+      decisions: game.decisions ?? {},
     });
   } catch (error) {
     console.error("[Baseball API] Boxscore error:", error);

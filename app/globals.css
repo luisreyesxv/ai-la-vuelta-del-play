@@ -5,21 +5,20 @@
    GLOBAL DESIGN SYSTEM
 ========================================= */
 
-:root {
-  /* Brand colors */
-  --color-primary: #f5c400;
-  --color-gold: #e9a900;
-  --color-orange: #f28c00;
+/* =========================================
+   1. BASE DESIGN TOKENS
+========================================= */
 
+:root {
   /* Backgrounds */
   --color-background: #111111;
   --color-surface: #242424;
-  --color-surface-light: #303030;
+  --color-surface-elevated: #303030;
 
   /* Text */
-  --color-text: #ffffff;
-  --color-text-secondary: #d8d8d8;
-  --color-text-muted: #999999;
+  --color-foreground: #ffffff;
+  --color-secondary: #d8d8d8;
+  --color-muted: #999999;
 
   /* Borders */
   --color-border: #3a3a3a;
@@ -32,11 +31,98 @@
   --header-height: 64px;
   --content-max-width: 1200px;
 
+  /* Default theme */
   color-scheme: dark;
 }
 
 /* =========================================
-   RESET AND BASE STYLES
+   2. ÁGUILAS THEME
+========================================= */
+
+:root,
+:root[data-team="aguilas"] {
+  --team-primary: #f5c400;
+  --team-primary-hover: #e9a900;
+  --team-primary-muted: #806600;
+  --team-secondary: #111111;
+  --team-accent: #e9a900;
+  --team-text: #ffffff;
+
+  --team-background-gradient: #29230c;
+  --color-background: #111111;
+  --team-card-border: #806600;
+}
+
+/* =========================================
+   3. YANKEES THEME
+========================================= */
+
+/* :root[data-team="yankees"] {
+  --team-primary: #5b9bd5;
+  --team-primary-hover: #78b5e8;
+  --team-primary-muted: #1a3d78;
+  --team-secondary: #c4ced4;
+  --team-accent: #e4002b;
+  --color-background: #0b111b;
+  --team-background-gradient: #0c1629;
+  --team-text: black;
+  --team-card-border: #1a3d78;
+} */
+
+:root[data-team="yankees"] {
+  --team-primary: #1557b8;
+  --team-primary-hover: #347de0;
+  --team-primary-muted: #294e7d;
+  --team-secondary: #252b35;
+  --team-accent: #a9b9cf;
+  --team-text: #dde3ec;
+
+  --team-background-gradient: linear-gradient(
+    135deg,
+    #18283d 0%,
+    #263d59 50%,
+    #17263a 100%
+  );
+  --color-background: #1c2736;
+  --team-card-border: #526a88;
+}
+
+/* =========================================
+   4. TAILWIND THEME MAPPING
+========================================= */
+
+@theme inline {
+  /* Team colors */
+  --color-primary: var(--team-primary);
+  --color-primary-hover: var(--team-primary-hover);
+  --color-primary-muted: var(--team-primary-muted);
+  --color-team-secondary: var(--team-secondary);
+  --color-accent: var(--team-accent);
+  --color-on-primary: var(--team-on-primary);
+
+  /* Backgrounds */
+  --color-background: var(--color-background);
+  --color-background-gradient: var(--team-background-gradient);
+  --color-surface: var(--color-surface);
+  --color-surface-elevated: var(--color-surface-elevated);
+
+  /* Text */
+  --color-primary-text: var(--team-text);
+  --color-foreground: var(--color-foreground);
+  --color-secondary: var(--color-secondary);
+  --color-muted: var(--color-muted);
+
+  /* Borders */
+  --color-border: var(--color-border);
+  --color-team-border: var(--team-card-border);
+
+  /* Fonts */
+  --font-heading: var(--font-heading);
+  --font-body: var(--font-body);
+}
+
+/* =========================================
+   5. RESET AND BASE STYLES
 ========================================= */
 
 * {
@@ -47,13 +133,18 @@ html {
   min-height: 100%;
   background: var(--color-background);
   scroll-behavior: smooth;
+  scroll-padding-top: 80px;
+  scroll-padding-bottom: 80px;
 }
 
 body {
   min-height: 100vh;
   margin: 0;
+  overflow-x: clip;
+
   background: var(--color-background);
-  color: var(--color-text);
+  color: var(--color-foreground);
+
   font-family: var(--font-body), sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -73,15 +164,25 @@ button {
 a {
   color: inherit;
   text-decoration: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+button {
+  -webkit-tap-highlight-color: transparent;
 }
 
 img,
 video {
   max-width: 100%;
+  height: auto;
+}
+
+iframe {
+  border: 0;
 }
 
 /* =========================================
-   TYPOGRAPHY
+   6. TYPOGRAPHY
 ========================================= */
 
 h1,
@@ -100,63 +201,51 @@ p {
 }
 
 /* =========================================
-   REUSABLE DESIGN UTILITIES
+   7. REUSABLE DESIGN UTILITIES
 ========================================= */
 
 .text-primary {
-  color: var(--color-primary);
+  color: var(--team-primary);
 }
 
 .text-secondary {
-  color: var(--color-text-secondary);
+  color: var(--color-secondary);
+}
+
+.text-muted {
+  color: var(--color-muted);
 }
 
 .bg-surface {
   background-color: var(--color-surface);
 }
 
+.bg-surface-elevated {
+  background-color: var(--color-surface-elevated);
+}
+
 .brand-gradient {
-  background: linear-gradient(135deg, var(--color-primary), var(--color-gold));
+  background: linear-gradient(135deg, var(--team-primary), var(--team-accent));
 }
 
 /* =========================================
-   ACCESSIBILITY
+   8. ACCESSIBILITY
 ========================================= */
 
 :focus-visible {
-  outline: 2px solid var(--color-primary);
+  outline: 2px solid var(--team-primary);
   outline-offset: 3px;
 }
 
 ::selection {
-  background: var(--color-primary);
-  color: #111111;
+  background: var(--team-primary);
+  color: var(--team-on-primary);
 }
 
 /* =========================================
-   STICKY VIDEO / MOBILE OPTIMIZATION
+   9. MOTION PREFERENCES
 ========================================= */
 
-html {
-  scroll-padding-top: 80px;
-  scroll-padding-bottom: 80px;
-}
-
-body {
-  overflow-x: clip;
-}
-
-iframe {
-  border: 0;
-}
-
-/* Better mobile touch interaction */
-a,
-button {
-  -webkit-tap-highlight-color: transparent;
-}
-
-/* Smooth anchor navigation */
 @media (prefers-reduced-motion: no-preference) {
   html {
     scroll-behavior: smooth;

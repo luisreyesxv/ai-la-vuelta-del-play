@@ -1,20 +1,18 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 
 import { getBaseballGames } from "@/lib/baseball/games";
 import { StatsApiError } from "@/lib/baseball/api";
+import type { TeamId } from "@/contexts/TeamContext";
 
-/**
- * GET /api/baseball/games
- *
- * Returns normalized LIDOM games.
- *
- * The browser communicates with this route.
- * MLB StatsAPI requests remain server-side.
- */
-
-export async function GET() {
+export async function GET(request: NextRequest) {
   try {
-    const data = await getBaseballGames();
+    const requestedTeam = request.nextUrl.searchParams.get("team") ?? "aguilas";
+
+    if (requestedTeam !== "aguilas" && requestedTeam !== "yankees") {
+      return NextResponse.json({ error: "Invalid team." }, { status: 400 });
+    }
+
+    const data = await getBaseballGames(requestedTeam as TeamId);
 
     return NextResponse.json(data, {
       status: 200,
@@ -23,28 +21,17 @@ export async function GET() {
       },
     });
   } catch (error) {
-    console.error("[Baseball API] Unable to retrieve LIDOM games:", error);
-
-    if (error instanceof StatsApiError) {
-      return NextResponse.json(
-        {
-          error: "Baseball data is temporarily unavailable.",
-        },
-        {
-          status: 502,
-          headers: {
-            "Cache-Control": "no-store",
-          },
-        },
-      );
-    }
+    console.error("[Baseball API] Games error:", error);
 
     return NextResponse.json(
       {
-        error: "An unexpected error occurred retrieving baseball data.",
+        error:
+          error instanceof StatsApiError
+            ? "Baseball data is temporarily unavailable."
+            : "Unable to retrieve baseball games.",
       },
       {
-        status: 500,
+        status: 502,
         headers: {
           "Cache-Control": "no-store",
         },

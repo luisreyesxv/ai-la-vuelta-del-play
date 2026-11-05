@@ -31,7 +31,7 @@ export default function StandingsUpdate({
         type="button"
         onClick={onRefresh}
         disabled={isRefreshing}
-        className="shrink-0 rounded-lg border border-[#806600] px-3 py-2 text-xs font-extrabold text-[#f5c400] transition-colors hover:bg-[#f5c400]/10 disabled:opacity-50"
+        className="shrink-0 rounded-lg border border-primary-muted  px-3 py-2 text-xs font-extrabold text-primary transition-colors hover:bg-primary/10 disabled:opacity-50"
       >
         {isRefreshing ? "Actualizando..." : "↻ Actualizar"}
       </button>

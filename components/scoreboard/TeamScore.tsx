@@ -7,13 +7,13 @@ interface TeamScoreProps {
 }
 
 export default function TeamScore({ data, isAguilas, isHome }: TeamScoreProps) {
-  const scoreColor = isAguilas ? "text-[#f5c400]" : "text-white";
+  const scoreColor = isAguilas ? "text-primary" : "text-white";
 
   return (
     <div
       className={`rounded-xl p-3 ${
         isAguilas
-          ? "border border-[#806600] bg-[#f5c400]/10"
+          ? "border border-primary-muted  bg-primary/10"
           : "border border-white/5 bg-black/20"
       }`}
     >
@@ -22,7 +22,7 @@ export default function TeamScore({ data, isAguilas, isHome }: TeamScoreProps) {
         <div className="min-w-0">
           <p
             className={`truncate text-sm font-extrabold ${
-              isAguilas ? "text-[#f5c400]" : "text-white"
+              isAguilas ? "text-primary" : "text-white"
             }`}
           >
             {data.team.name}

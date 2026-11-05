@@ -20,6 +20,22 @@ export const LIDOM_CONFIG = {
   aguilasTeamId: 667,
 } as const;
 
+export const BASEBALL_CONFIG = {
+  aguilas: {
+    sportId: 17,
+    leagueId: LIDOM_CONFIG.leagueId,
+    teamId: LIDOM_CONFIG.aguilasTeamId,
+    timeZone: "America/Santo_Domingo",
+  },
+
+  yankees: {
+    sportId: 1,
+    leagueId: null,
+    teamId: 147,
+    timeZone: "America/New_York",
+  },
+} as const;
+
 /**
  * Default request cache duration.
  * Individual callers can override this value.

@@ -1,22 +1,29 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 
 import { getBaseballStandings } from "@/lib/baseball/standings";
+import type { TeamId } from "@/contexts/TeamContext";
 
-export async function GET() {
+export async function GET(request: NextRequest) {
   try {
-    const standings = await getBaseballStandings();
+    const requestedTeam = request.nextUrl.searchParams.get("team") ?? "aguilas";
 
-    return NextResponse.json(standings);
+    if (requestedTeam !== "aguilas" && requestedTeam !== "yankees") {
+      return NextResponse.json({ error: "Invalid team." }, { status: 400 });
+    }
+
+    const data = await getBaseballStandings(requestedTeam as TeamId);
+
+    return NextResponse.json(data, {
+      headers: {
+        "Cache-Control": "no-store",
+      },
+    });
   } catch (error) {
-    console.error("LIDOM standings API error:", error);
+    console.error("Baseball standings API error:", error);
 
     return NextResponse.json(
-      {
-        error: "Unable to retrieve LIDOM standings.",
-      },
-      {
-        status: 502,
-      },
+      { error: "Unable to retrieve baseball standings." },
+      { status: 502 },
     );
   }
 }

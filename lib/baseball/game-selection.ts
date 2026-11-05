@@ -1,33 +1,41 @@
 import { BaseballGame } from "@/types/baseball";
-import { LIDOM_CONFIG } from "@/lib/baseball/api";
+import type { TeamId } from "@/contexts/TeamContext";
 
-/**
- * Returns true when a game involves Águilas Cibaeñas.
- */
-export function isAguilasGame(game: BaseballGame): boolean {
-  return (
-    game.home.team.id === LIDOM_CONFIG.aguilasTeamId ||
-    game.away.team.id === LIDOM_CONFIG.aguilasTeamId
-  );
+export const TEAM_IDS: Record<TeamId, number> = {
+  aguilas: 667,
+  yankees: 147,
+};
+
+export const TEAM_NAMES: Record<TeamId, string> = {
+  aguilas: "Águilas Cibaeñas",
+  yankees: "New York Yankees",
+};
+
+export function isTeamGame(game: BaseballGame, teamId: number): boolean {
+  return game.home.team.id === teamId || game.away.team.id === teamId;
 }
 
-/**
- * Sorts games from newest to oldest.
- */
+export function isAguilasGame(game: BaseballGame): boolean {
+  return isTeamGame(game, TEAM_IDS.aguilas);
+}
+
 export function newestFirst(a: BaseballGame, b: BaseballGame): number {
   return new Date(b.gameDate).getTime() - new Date(a.gameDate).getTime();
 }
 
-/**
- * Selects only the latest completed Águilas game.
- *
- * Live, scheduled, postponed, and cancelled games
- * are never eligible for the main scoreboard.
- */
-export function selectAguilasGame(games: BaseballGame[]): BaseballGame | null {
+export function selectTeamGame(
+  games: BaseballGame[],
+  teamId: number,
+): BaseballGame | null {
   return (
     games
-      .filter((game) => isAguilasGame(game) && game.status.type === "final")
+      .filter(
+        (game) => isTeamGame(game, teamId) && game.status.type === "final",
+      )
       .sort(newestFirst)[0] ?? null
   );
+}
+
+export function selectAguilasGame(games: BaseballGame[]): BaseballGame | null {
+  return selectTeamGame(games, TEAM_IDS.aguilas);
 }

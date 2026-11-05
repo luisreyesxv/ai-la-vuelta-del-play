@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 
+import { useTeam } from "@/contexts/TeamContext";
 import { BaseballGame } from "@/types/baseball";
 import { GameBoxscore } from "@/types/boxscore";
 
@@ -14,6 +15,7 @@ type Tab = "summary" | "batting" | "pitching";
 export default function GameDetailsPage({ params }: Props) {
   const router = useRouter();
 
+  const { selectedTeam } = useTeam();
   const [gamePk, setGamePk] = useState<string | null>(null);
   const [game, setGame] = useState<BaseballGame | null>(null);
   const [boxscore, setBoxscore] = useState<GameBoxscore | null>(null);
@@ -46,9 +48,10 @@ export default function GameDetailsPage({ params }: Props) {
         setLoading(true);
         setError(false);
 
-        const response = await fetch("/api/baseball/schedule", {
-          cache: "no-store",
-        });
+        const response = await fetch(
+          `/api/baseball/schedule?team=${selectedTeam}`,
+          { cache: "no-store" },
+        );
 
         if (!response.ok) {
           throw new Error("Unable to retrieve game.");
@@ -72,7 +75,7 @@ export default function GameDetailsPage({ params }: Props) {
           setBoxscoreLoading(true);
 
           const boxscoreResponse = await fetch(
-            `/api/baseball/games/${gamePk}`,
+            `/api/baseball/games/${gamePk}?team=${selectedTeam}`,
             { cache: "no-store" },
           );
 
@@ -101,11 +104,11 @@ export default function GameDetailsPage({ params }: Props) {
     return () => {
       cancelled = true;
     };
-  }, [gamePk]);
+  }, [gamePk, selectedTeam]);
 
   if (loading || !gamePk) {
     return (
-      <main className="min-h-screen bg-[#111111] p-8 text-center text-white">
+      <main className="min-h-screen bg-background p-8 text-center text-white">
         Cargando detalles del partido...
       </main>
     );
@@ -113,15 +116,26 @@ export default function GameDetailsPage({ params }: Props) {
 
   if (error || !game) {
     return (
-      <main className="min-h-screen bg-[#111111] p-8 text-center text-white">
-        <p>No fue posible cargar los detalles del partido.</p>
+      <main className="flex min-h-screen items-center justify-center bg-background px-6 text-center text-white">
+        <div className="max-w-md">
+          <div className="mb-5 text-5xl">⚾</div>
 
-        <button
-          onClick={() => router.back()}
-          className="mt-5 font-bold text-[#f5c400]"
-        >
-          ← VOLVER
-        </button>
+          <h1 className="text-xl font-extrabold uppercase text-primary">
+            Información no disponible
+          </h1>
+
+          <p className="mt-4 text-sm leading-6 text-[#999999]">
+            No podemos encontrar la información de este partido en este momento.
+            Por favor, intenta nuevamente más tarde.
+          </p>
+
+          <button
+            onClick={() => router.back()}
+            className="mt-7 rounded-lg bg-primary px-6 py-3 text-sm font-extrabold text-black"
+          >
+            ← VOLVER
+          </button>
+        </div>
       </main>
     );
   }
@@ -149,16 +163,16 @@ export default function GameDetailsPage({ params }: Props) {
   ];
 
   return (
-    <main className="min-h-screen bg-[#111111] px-4 pb-28 pt-6 text-white">
+    <main className="min-h-screen bg-background px-4 pb-28 pt-6 text-white">
       <div className="mx-auto max-w-6xl">
         <button
           onClick={() => router.back()}
-          className="mb-6 text-xs font-bold text-[#f5c400]"
+          className="mb-6 text-xs font-bold text-primary"
         >
           ← VOLVER
         </button>
 
-        <p className="text-xs font-bold uppercase tracking-widest text-[#f5c400]">
+        <p className="text-xs font-bold uppercase tracking-widest text-primary">
           Detalles del partido
         </p>
 
@@ -172,8 +186,8 @@ export default function GameDetailsPage({ params }: Props) {
 
         {/* SCORE */}
 
-        <section className="mt-6 rounded-2xl border border-[#806600] bg-gradient-to-br from-[#29230c] to-[#191919] p-5">
-          <p className="mb-5 text-center text-xs font-extrabold tracking-widest text-[#f5c400]">
+        <section className="mt-6 rounded-2xl border border-primary-muted bg-gradient-to-br from-(--color-background-gradient) to-[#191919] p-5">
+          <p className="mb-5 text-center text-xs font-extrabold tracking-widest text-primary">
             {isFinal ? "FINAL" : (game.status.description ?? "PARTIDO")}
           </p>
 
@@ -184,7 +198,7 @@ export default function GameDetailsPage({ params }: Props) {
             >
               <span className="font-bold">{team.team.name}</span>
 
-              <span className="font-[family-name:var(--font-oswald)] text-4xl font-bold text-[#f5c400]">
+              <span className="font-[family-name:var(--font-oswald)] text-4xl font-bold text-primary">
                 {team.score?.runs ?? "—"}
               </span>
             </div>
@@ -201,7 +215,7 @@ export default function GameDetailsPage({ params }: Props) {
 
         {isFinal && boxscore && (
           <section className="mt-6 rounded-2xl border border-[#3a3a3a] bg-[#242424] p-5">
-            <h2 className="mb-5 text-sm font-extrabold uppercase tracking-widest text-[#f5c400]">
+            <h2 className="mb-5 text-sm font-extrabold uppercase tracking-widest text-primary">
               Decisiones del partido
             </h2>
 
@@ -211,7 +225,7 @@ export default function GameDetailsPage({ params }: Props) {
                   Pitcher ganador
                 </p>
 
-                <p className="mt-2 font-extrabold text-[#f5c400]">
+                <p className="mt-2 font-extrabold text-primary">
                   {game.decisions?.winner?.fullName ?? "No disponible"}
                 </p>
               </div>
@@ -221,7 +235,7 @@ export default function GameDetailsPage({ params }: Props) {
                   Pitcher perdedor
                 </p>
 
-                <p className="mt-2 font-extrabold text-[#f5c400]">
+                <p className="mt-2 font-extrabold text-primary">
                   {game.decisions?.loser?.fullName ?? "No disponible"}
                 </p>
               </div>
@@ -229,7 +243,7 @@ export default function GameDetailsPage({ params }: Props) {
 
             {savePitcher?.fullName && (
               <div className="mt-4 rounded-xl bg-[#191919] p-4">
-                <p className="text-xs font-bold uppercase text-[#f5c400]">
+                <p className="text-xs font-bold uppercase text-primary">
                   Juego salvado
                 </p>
                 <p className="mt-2 font-extrabold">{savePitcher.fullName}</p>
@@ -240,7 +254,7 @@ export default function GameDetailsPage({ params }: Props) {
 
         {/* NAVIGATION */}
 
-        <div className="sticky z-20 mt-8 overflow-x-auto border-b border-[#3a3a3a] bg-[#111111]">
+        <div className="sticky z-20 mt-8 overflow-x-auto border-b border-[#3a3a3a] bg-background">
           <div className="flex min-w-max">
             {tabs.map((tab) => (
               <button
@@ -248,7 +262,7 @@ export default function GameDetailsPage({ params }: Props) {
                 onClick={() => setActiveTab(tab.id)}
                 className={`border-b-2 px-4 py-4 text-xs font-extrabold uppercase transition-colors ${
                   activeTab === tab.id
-                    ? "border-[#f5c400] text-[#f5c400]"
+                    ? "border-primary text-primary"
                     : "border-transparent text-[#777777]"
                 }`}
               >
@@ -269,7 +283,7 @@ export default function GameDetailsPage({ params }: Props) {
             {game.inning?.scores?.length ? (
               <div className="overflow-x-auto rounded-xl border border-[#3a3a3a] bg-[#242424]">
                 <table className="w-full text-center text-sm">
-                  <thead className="text-[#f5c400]">
+                  <thead className="text-primary">
                     <tr>
                       <th className="p-3 text-left">Equipo</th>
                       {game.inning.scores.map((inning) => (
@@ -338,13 +352,13 @@ export default function GameDetailsPage({ params }: Props) {
 
                 return (
                   <div key={label}>
-                    <h3 className="mb-3 font-extrabold uppercase text-[#f5c400]">
+                    <h3 className="mb-3 font-extrabold uppercase text-primary">
                       {label}
                     </h3>
 
                     <div className="overflow-x-auto rounded-xl border border-[#3a3a3a] bg-[#242424]">
                       <table className="w-full text-center text-xs">
-                        <thead className="text-[#f5c400]">
+                        <thead className="text-primary">
                           <tr>
                             <th className="p-3 text-left">Jugador</th>
                             <th>AB</th>
@@ -418,13 +432,13 @@ export default function GameDetailsPage({ params }: Props) {
 
                 return (
                   <div key={label}>
-                    <h3 className="mb-3 font-extrabold uppercase text-[#f5c400]">
+                    <h3 className="mb-3 font-extrabold uppercase text-primary">
                       {label}
                     </h3>
 
                     <div className="overflow-x-auto rounded-xl border border-[#3a3a3a] bg-[#242424]">
                       <table className="w-full text-center text-xs">
-                        <thead className="text-[#f5c400]">
+                        <thead className="text-primary">
                           <tr>
                             <th className="p-3 text-left">Lanzador</th>
                             <th>IP</th>
