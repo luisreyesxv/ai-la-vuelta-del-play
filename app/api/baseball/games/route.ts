@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 
 import { getBaseballGames } from "@/lib/baseball/games";
 import { StatsApiError } from "@/lib/baseball/api";
+
 import type { TeamId } from "@/contexts/TeamContext";
 
 export async function GET(request: NextRequest) {

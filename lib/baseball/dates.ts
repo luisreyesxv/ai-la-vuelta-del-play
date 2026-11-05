@@ -4,28 +4,41 @@
 
 const TIME_ZONE = "America/Santo_Domingo";
 
-export function getDateParts() {
-  const parts = new Intl.DateTimeFormat("en-US", {
+function formatDate(date: Date): string {
+  const parts = new Intl.DateTimeFormat("en-CA", {
     timeZone: TIME_ZONE,
     year: "numeric",
     month: "2-digit",
     day: "2-digit",
-  }).formatToParts(new Date());
+  }).formatToParts(date);
 
-  return Object.fromEntries(parts.map((part) => [part.type, part.value]));
+  const values = Object.fromEntries(
+    parts.map((part) => [part.type, part.value]),
+  );
+
+  return `${values.year}-${values.month}-${values.day}`;
 }
 
 export function getLocalDate(): string {
-  const date = getDateParts();
-
-  return `${date.year}-${date.month}-${date.day}`;
+  return formatDate(new Date());
 }
 
 export function getCurrentLidomSeason(): number {
-  const date = getDateParts();
+  const date = new Date();
 
-  const year = Number(date.year);
-  const month = Number(date.month);
+  const month = Number(
+    new Intl.DateTimeFormat("en-US", {
+      timeZone: TIME_ZONE,
+      month: "numeric",
+    }).format(date),
+  );
+
+  const year = Number(
+    new Intl.DateTimeFormat("en-US", {
+      timeZone: TIME_ZONE,
+      year: "numeric",
+    }).format(date),
+  );
 
   return month >= 10 ? year : year - 1;
 }
@@ -38,16 +51,9 @@ export function getGameLocalDate(
 
   if (!gameDate) return "";
 
-  const parts = new Intl.DateTimeFormat("en-US", {
-    timeZone: TIME_ZONE,
-    year: "numeric",
-    month: "2-digit",
-    day: "2-digit",
-  }).formatToParts(new Date(gameDate));
+  const parsedDate = new Date(gameDate);
 
-  const values = Object.fromEntries(
-    parts.map((part) => [part.type, part.value]),
-  );
+  if (Number.isNaN(parsedDate.getTime())) return "";
 
-  return `${values.year}-${values.month}-${values.day}`;
+  return formatDate(parsedDate);
 }

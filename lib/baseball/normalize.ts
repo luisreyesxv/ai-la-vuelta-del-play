@@ -21,18 +21,25 @@ export function normalizeStatus(
   detailed?: string,
   abstract?: string,
 ): GameStatusType {
-  const state = (detailed ?? "").toLowerCase();
-  const general = (abstract ?? "").toLowerCase();
+  const state = (detailed ?? "").toLowerCase().trim();
+  const general = (abstract ?? "").toLowerCase().trim();
 
+  // These statuses take priority over everything else.
   if (state.includes("delay")) return "delayed";
   if (state.includes("postpon")) return "postponed";
   if (state.includes("suspend")) return "suspended";
   if (state.includes("cancel")) return "cancelled";
 
-  if (general === "live" || state.includes("in progress")) {
+  // Never classify an unfinished game as final.
+  if (
+    general === "live" ||
+    state.includes("in progress") ||
+    state.includes("warmup")
+  ) {
     return "live";
   }
 
+  // Only explicitly completed games qualify.
   if (
     general === "final" ||
     state === "game over" ||

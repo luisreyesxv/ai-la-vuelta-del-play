@@ -41,7 +41,7 @@ export default function TeamForm({ games, teamId, teamName }: TeamFormProps) {
   return (
     <section className="mt-8 rounded-2xl border border-border bg-surface p-4">
       <div className="mb-4">
-        <p className="text-xs font-bold uppercase tracking-widest text-primary">
+        <p className="text-xs font-bold uppercase tracking-widest text-team-secondary">
           Rendimiento reciente
         </p>
 

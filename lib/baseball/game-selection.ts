@@ -1,4 +1,4 @@
-import { BaseballGame } from "@/types/baseball";
+import type { BaseballGame } from "@/types/baseball";
 import type { TeamId } from "@/contexts/TeamContext";
 
 export const TEAM_IDS: Record<TeamId, number> = {
@@ -23,15 +23,21 @@ export function newestFirst(a: BaseballGame, b: BaseballGame): number {
   return new Date(b.gameDate).getTime() - new Date(a.gameDate).getTime();
 }
 
+export function isCompletedGame(game: BaseballGame): boolean {
+  return (
+    game.status.type === "final" &&
+    typeof game.home.score?.runs === "number" &&
+    typeof game.away.score?.runs === "number"
+  );
+}
+
 export function selectTeamGame(
   games: BaseballGame[],
   teamId: number,
 ): BaseballGame | null {
   return (
     games
-      .filter(
-        (game) => isTeamGame(game, teamId) && game.status.type === "final",
-      )
+      .filter((game) => isTeamGame(game, teamId) && isCompletedGame(game))
       .sort(newestFirst)[0] ?? null
   );
 }

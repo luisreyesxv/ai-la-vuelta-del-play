@@ -118,12 +118,12 @@ export default function FloatingVideo() {
                 </p>
 
                 <p className="text-xs text--muted">
-                  {isVideoAguilas
-                    ? "Béisbol dominicano"
-                    : "Major League Baseball"}
+                  {isVideoAguilas ? "KQ94.5" : "Major League Baseball podcasts"}
                 </p>
 
-                <p className="text-[10px] text-secondary">Transmisión actual</p>
+                <p className="text-[10px] text-secondary">
+                  Episodio más reciente
+                </p>
               </div>
             </div>
 

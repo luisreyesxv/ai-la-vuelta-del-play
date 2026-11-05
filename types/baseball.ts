@@ -194,9 +194,8 @@ export interface FeaturedGameResponse {
 
   selectionReason:
     | "aguilas_played_yesterday"
-    | "yankees_fallback"
-    | "no_game_yesterday";
-
+    | "latest_completed_game"
+    | "no_completed_game";
   metadata: {
     fetchedAt: string;
   };

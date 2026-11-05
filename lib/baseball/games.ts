@@ -13,6 +13,7 @@ import { normalizeGame } from "@/lib/baseball/normalize";
 import {
   TEAM_IDS,
   isTeamGame,
+  isCompletedGame,
   newestFirst,
   selectTeamGame,
 } from "@/lib/baseball/game-selection";
@@ -66,23 +67,23 @@ export async function getBaseballGames(
 
   const games = await getTeamSeasonSchedule(team, season);
 
-  const completedGames = games
-    .filter((game) => game.status.type === "final")
-    .sort(newestFirst);
+  const completedGames = games.filter(isCompletedGame).sort(newestFirst);
 
-  let selectedGame = selectTeamGame(completedGames, TEAM_IDS[team]);
+  let selectedGame: BaseballGame | null = completedGames[0] ?? null;
 
   if (!selectedGame) {
     selectedGame = await getHistoricalFallback(team, season);
-
-    if (selectedGame) {
-      completedGames.push(selectedGame);
-    }
   }
+
+  const allCompletedGames = selectedGame
+    ? completedGames.some((game) => game.gamePk === selectedGame!.gamePk)
+      ? completedGames
+      : [...completedGames, selectedGame].sort(newestFirst)
+    : completedGames;
 
   return {
     selectedGame,
-    games: completedGames.sort(newestFirst),
+    games: allCompletedGames,
 
     metadata: {
       fetchedAt: new Date().toISOString(),

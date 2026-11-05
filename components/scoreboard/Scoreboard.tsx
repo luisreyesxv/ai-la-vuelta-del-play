@@ -110,7 +110,7 @@ export default function Scoreboard() {
     <section>
       <div className="mb-4 flex items-end justify-between">
         <div>
-          <p className="text-xs font-bold uppercase tracking-widest text-primary">
+          <p className="text-xs font-bold uppercase tracking-widest text-team-secondary">
             Sigue la pelota
           </p>
 

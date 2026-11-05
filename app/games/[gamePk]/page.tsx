@@ -153,8 +153,6 @@ export default function GameDetailsPage({ params }: Props) {
     { label: "Local", data: boxscore?.teams?.home },
   ];
 
-  const winningPitcher = boxscore?.decisions?.winner;
-  const losingPitcher = boxscore?.decisions?.loser;
   const savePitcher = boxscore?.decisions?.save;
 
   const tabs: { id: Tab; label: string }[] = [
@@ -168,12 +166,12 @@ export default function GameDetailsPage({ params }: Props) {
       <div className="mx-auto max-w-6xl">
         <button
           onClick={() => router.back()}
-          className="mb-6 text-xs font-bold text-primary"
+          className="mb-6 text-xs font-bold text-accent"
         >
           ← VOLVER
         </button>
 
-        <p className="text-xs font-bold uppercase tracking-widest text-primary">
+        <p className="text-xs font-bold uppercase tracking-widest text-team-secondary">
           Detalles del partido
         </p>
 
@@ -186,7 +184,7 @@ export default function GameDetailsPage({ params }: Props) {
         {/* SCORE */}
 
         <section className="mt-6 rounded-2xl border border-primary-muted bg-gradient-to-br from-(--color-background-gradient) to-surface-overlay p-5">
-          <p className="mb-5 text-center text-xs font-extrabold tracking-widest text-primary">
+          <p className="mb-5 pb-2 text-center text-xs font-extrabold tracking-widest text-team-secondary">
             {isFinal ? "FINAL" : (game.status.description ?? "PARTIDO")}
           </p>
 
@@ -214,27 +212,27 @@ export default function GameDetailsPage({ params }: Props) {
 
         {isFinal && boxscore && (
           <section className="mt-6 rounded-2xl border border-border bg-surface p-5">
-            <h2 className="mb-5 text-sm font-extrabold uppercase tracking-widest text-primary">
+            <h2 className="mb-5 text-md font-extrabold uppercase tracking-widest text-team-secondary">
               Decisiones del partido
             </h2>
 
             <div className="grid grid-cols-2 gap-4 mt-6">
               <div className="rounded-xl border border-border bg-surface p-4">
-                <p className="text-xs font-bold uppercase text--muted">
+                <p className="text-xs font-bold uppercase text-muted">
                   Pitcher ganador
                 </p>
 
-                <p className="mt-2 font-extrabold text-primary">
+                <p className="mt-2 font-extrabold text-team-secondary">
                   {game.decisions?.winner?.fullName ?? "No disponible"}
                 </p>
               </div>
 
               <div className="rounded-xl border border-border bg-surface p-4">
-                <p className="text-xs font-bold uppercase text--muted">
+                <p className="text-xs font-bold uppercase text-muted">
                   Pitcher perdedor
                 </p>
 
-                <p className="mt-2 font-extrabold text-primary">
+                <p className="mt-2 font-extrabold text-team-secondary">
                   {game.decisions?.loser?.fullName ?? "No disponible"}
                 </p>
               </div>
@@ -242,7 +240,7 @@ export default function GameDetailsPage({ params }: Props) {
 
             {savePitcher?.fullName && (
               <div className="mt-4 rounded-xl bg-surface-overlay p-4">
-                <p className="text-xs font-bold uppercase text-primary">
+                <p className="text-xs font-bold uppercase text-accent">
                   Juego salvado
                 </p>
                 <p className="mt-2 font-extrabold">{savePitcher.fullName}</p>
@@ -261,7 +259,7 @@ export default function GameDetailsPage({ params }: Props) {
                 onClick={() => setActiveTab(tab.id)}
                 className={`border-b-2 px-4 py-4 text-xs font-extrabold uppercase transition-colors ${
                   activeTab === tab.id
-                    ? "border-primary text-primary"
+                    ? "border-accent text-team-secondary font-extrabold "
                     : "border-transparent text-subtle"
                 }`}
               >
@@ -282,7 +280,7 @@ export default function GameDetailsPage({ params }: Props) {
             {game.inning?.scores?.length ? (
               <div className="overflow-x-auto rounded-xl border border-border bg-surface">
                 <table className="w-full text-center text-sm">
-                  <thead className="text-primary">
+                  <thead className="text-team-secondary">
                     <tr>
                       <th className="p-3 text-left">Equipo</th>
                       {game.inning.scores.map((inning) => (

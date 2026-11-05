@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
+import Link from "next/link";
 
 import { useTeam } from "@/contexts/TeamContext";
 import { BaseballGame } from "@/types/baseball";
@@ -198,182 +199,205 @@ export default function Schedule() {
           const isFinal = game.status.type === "final";
 
           return (
-            <article
-              key={game.gamePk}
-              className="overflow-hidden rounded-xl border border-primary-muted bg-gradient-to-br from-(--color-background-gradient)] to-surface-overlay"
+            <div
+              key={`${game.gamePk} -historic`}
+              className="mb-10 rounded-xl border border-primary-muted"
             >
-              <div className="flex items-center justify-between border-b border-white/10 px-4 py-3">
-                <span className="text-xs font-bold capitalize text--muted">
-                  {formatDate(game.gameDate)}
-                </span>
+              <article
+                key={game.gamePk}
+                className={`overflow-hidden bg-gradient-to-br from-(--color-background-gradient) to-surface-overlay ${
+                  isFinal
+                    ? "transition-all hover:border-primary hover:shadow-lg"
+                    : ""
+                }`}
+              >
+                <div className="flex items-center justify-between border-b border-white/10 px-4 py-3">
+                  <span className="text-xs font-bold capitalize text--muted">
+                    {formatDate(game.gameDate)}
+                  </span>
 
-                <span className="text-[10px] font-extrabold uppercase tracking-widest text-primary">
-                  {isFinal
-                    ? "FINAL"
-                    : game.status.type === "live"
-                      ? "EN VIVO"
-                      : game.status.type === "delayed"
-                        ? "DEMORADO"
-                        : game.status.type === "suspended"
-                          ? "SUSPENDIDO"
-                          : "PRÓXIMO"}
-                </span>
-              </div>
+                  <span className="text-[10px] font-extrabold uppercase tracking-widest text-primary">
+                    {isFinal
+                      ? "FINAL"
+                      : game.status.type === "live"
+                        ? "EN VIVO"
+                        : game.status.type === "delayed"
+                          ? "DEMORADO"
+                          : game.status.type === "suspended"
+                            ? "SUSPENDIDO"
+                            : "PRÓXIMO"}
+                  </span>
+                </div>
 
-              <div className="p-4">
-                <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-3">
-                  <div className="text-center">
-                    <p className="mb-2 text-[9px] font-extrabold uppercase tracking-widest text--muted">
-                      VISITANTE
-                    </p>
+                <div className="p-4">
+                  <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-3">
+                    <div className="text-center">
+                      <p className="mb-2 text-[9px] font-extrabold uppercase tracking-widest text--muted">
+                        VISITANTE
+                      </p>
 
-                    <p
-                      className={`text-sm font-extrabold ${
-                        !isTeamHome ? "text-primary" : "text-white"
-                      }`}
-                    >
-                      {game.away.team.name}
-                    </p>
-
-                    {isFinal && (
                       <p
-                        className={`mt-1 font-[family-name:var(--font-oswald)] text-4xl font-bold ${
+                        className={`text-sm font-extrabold ${
                           !isTeamHome ? "text-primary" : "text-white"
                         }`}
                       >
-                        {game.away.score?.runs ?? "—"}
+                        {game.away.team.name}
                       </p>
-                    )}
-                  </div>
 
-                  <span className="font-[family-name:var(--font-oswald)] text-lg font-bold text-subtle">
-                    VS
-                  </span>
+                      {isFinal && (
+                        <p
+                          className={`mt-1 font-[family-name:var(--font-oswald)] text-4xl font-bold ${
+                            !isTeamHome ? "text-primary" : "text-white"
+                          }`}
+                        >
+                          {game.away.score?.runs ?? "—"}
+                        </p>
+                      )}
+                    </div>
 
-                  <div className="text-center">
-                    <p className="mb-2 text-[9px] font-extrabold uppercase tracking-widest text--muted">
-                      LOCAL
-                    </p>
+                    <span className="font-[family-name:var(--font-oswald)] text-lg font-bold text-subtle">
+                      VS
+                    </span>
 
-                    <p
-                      className={`text-sm font-extrabold ${
-                        isTeamHome ? "text-primary" : "text-white"
-                      }`}
-                    >
-                      {game.home.team.name}
-                    </p>
+                    <div className="text-center">
+                      <p className="mb-2 text-[9px] font-extrabold uppercase tracking-widest text--muted">
+                        LOCAL
+                      </p>
 
-                    {isFinal && (
                       <p
-                        className={`mt-1 font-[family-name:var(--font-oswald)] text-4xl font-bold ${
+                        className={`text-sm font-extrabold ${
                           isTeamHome ? "text-primary" : "text-white"
                         }`}
                       >
-                        {game.home.score?.runs ?? "—"}
+                        {game.home.team.name}
+                      </p>
+
+                      {isFinal && (
+                        <p
+                          className={`mt-1 font-[family-name:var(--font-oswald)] text-4xl font-bold ${
+                            isTeamHome ? "text-primary" : "text-white"
+                          }`}
+                        >
+                          {game.home.score?.runs ?? "—"}
+                        </p>
+                      )}
+                    </div>
+                  </div>
+                </div>
+
+                {isFinal && (
+                  <div className="border-t border-white/10 px-4 py-3">
+                    <p className="mb-3 text-[10px] font-extrabold uppercase tracking-widest text-primary">
+                      Estadísticas finales
+                    </p>
+
+                    <div className="grid grid-cols-[minmax(0,1fr)_repeat(3,36px)] gap-2 text-center">
+                      <span className="text-left text-[10px] text-subtle">
+                        EQUIPO
+                      </span>
+                      <span className="text-[10px] font-bold text--muted">
+                        R
+                      </span>
+                      <span className="text-[10px] font-bold text--muted">
+                        H
+                      </span>
+                      <span className="text-[10px] font-bold text--muted">
+                        E
+                      </span>
+
+                      {[game.away, game.home].map((team) => (
+                        <React.Fragment key={team.team.id}>
+                          <span
+                            className={`truncate text-left text-xs font-bold ${
+                              team.team.id === teamId
+                                ? "text-primary"
+                                : "text-white"
+                            }`}
+                          >
+                            {team.team.name}
+                          </span>
+
+                          <span className="text-sm font-extrabold text-white">
+                            {team.score?.runs ?? "—"}
+                          </span>
+
+                          <span className="text-sm text-secondary">
+                            {team.score?.hits ?? "—"}
+                          </span>
+
+                          <span className="text-sm text-secondary">
+                            {team.score?.errors ?? "—"}
+                          </span>
+                        </React.Fragment>
+                      ))}
+                    </div>
+
+                    {game.inning?.scores && game.inning.scores.length > 0 && (
+                      <div className="mt-4 overflow-x-auto">
+                        <table className="w-full text-center text-xs">
+                          <thead>
+                            <tr className="text--muted">
+                              <th className="py-2 text-left">INN</th>
+
+                              {game.inning.scores.map((inning) => (
+                                <th key={inning.inning} className="px-2">
+                                  {inning.inning}
+                                </th>
+                              ))}
+                            </tr>
+                          </thead>
+
+                          <tbody>
+                            {[
+                              { label: "V", key: "awayRuns" as const },
+                              { label: "L", key: "homeRuns" as const },
+                            ].map((team) => (
+                              <tr
+                                key={team.label}
+                                className="border-t border-white/5"
+                              >
+                                <td className="py-2 text-left font-bold text-primary">
+                                  {team.label}
+                                </td>
+
+                                {game.inning!.scores.map((inning) => (
+                                  <td
+                                    key={inning.inning}
+                                    className="px-2 text-white"
+                                  >
+                                    {inning[team.key] ?? "—"}
+                                  </td>
+                                ))}
+                              </tr>
+                            ))}
+                          </tbody>
+                        </table>
+                      </div>
+                    )}
+
+                    {game.venue && (
+                      <p className="mt-4 border-t border-white/5 pt-3 text-xs text--muted">
+                        📍 {game.venue}
                       </p>
                     )}
                   </div>
-                </div>
-              </div>
+                )}
 
-              {isFinal && (
-                <div className="border-t border-white/10 px-4 py-3">
-                  <p className="mb-3 text-[10px] font-extrabold uppercase tracking-widest text-primary">
-                    Estadísticas finales
-                  </p>
-
-                  <div className="grid grid-cols-[minmax(0,1fr)_repeat(3,36px)] gap-2 text-center">
-                    <span className="text-left text-[10px] text-subtle">
-                      EQUIPO
-                    </span>
-                    <span className="text-[10px] font-bold text--muted">R</span>
-                    <span className="text-[10px] font-bold text--muted">H</span>
-                    <span className="text-[10px] font-bold text--muted">E</span>
-
-                    {[game.away, game.home].map((team) => (
-                      <React.Fragment key={team.team.id}>
-                        <span
-                          className={`truncate text-left text-xs font-bold ${
-                            team.team.id === teamId
-                              ? "text-primary"
-                              : "text-white"
-                          }`}
-                        >
-                          {team.team.name}
-                        </span>
-
-                        <span className="text-sm font-extrabold text-white">
-                          {team.score?.runs ?? "—"}
-                        </span>
-
-                        <span className="text-sm text-secondary">
-                          {team.score?.hits ?? "—"}
-                        </span>
-
-                        <span className="text-sm text-secondary">
-                          {team.score?.errors ?? "—"}
-                        </span>
-                      </React.Fragment>
-                    ))}
+                {!isFinal && game.venue && (
+                  <div className="border-t border-white/10 px-4 py-3">
+                    <p className="text-xs text--muted">📍 {game.venue}</p>
                   </div>
+                )}
+              </article>
 
-                  {game.inning?.scores && game.inning.scores.length > 0 && (
-                    <div className="mt-4 overflow-x-auto">
-                      <table className="w-full text-center text-xs">
-                        <thead>
-                          <tr className="text--muted">
-                            <th className="py-2 text-left">INN</th>
-
-                            {game.inning.scores.map((inning) => (
-                              <th key={inning.inning} className="px-2">
-                                {inning.inning}
-                              </th>
-                            ))}
-                          </tr>
-                        </thead>
-
-                        <tbody>
-                          {[
-                            { label: "V", key: "awayRuns" as const },
-                            { label: "L", key: "homeRuns" as const },
-                          ].map((team) => (
-                            <tr
-                              key={team.label}
-                              className="border-t border-white/5"
-                            >
-                              <td className="py-2 text-left font-bold text-primary">
-                                {team.label}
-                              </td>
-
-                              {game.inning!.scores.map((inning) => (
-                                <td
-                                  key={inning.inning}
-                                  className="px-2 text-white"
-                                >
-                                  {inning[team.key] ?? "—"}
-                                </td>
-                              ))}
-                            </tr>
-                          ))}
-                        </tbody>
-                      </table>
-                    </div>
-                  )}
-
-                  {game.venue && (
-                    <p className="mt-4 border-t border-white/5 pt-3 text-xs text--muted">
-                      📍 {game.venue}
-                    </p>
-                  )}
-                </div>
-              )}
-
-              {!isFinal && game.venue && (
-                <div className="border-t border-white/10 px-4 py-3">
-                  <p className="text-xs text--muted">📍 {game.venue}</p>
-                </div>
-              )}
-            </article>
+              <Link
+                href={`/games/${game.gamePk}?team=${selectedTeam}`}
+                className="flex items-center justify-center gap-2 border-t border-white/10 bg-primary/80 px-4 py-4 text-xs font-extrabold uppercase tracking-widest text-primary transition-colors hover:bg-primary/90"
+              >
+                VER DETALLES DEL PARTIDO
+                <span aria-hidden="true">→</span>
+              </Link>
+            </div>
           );
         })}
       </div>

@@ -2,7 +2,6 @@ import Scoreboard from "@/components/scoreboard/Scoreboard";
 import Standings from "@/components/standings/Standings";
 import Schedule from "@/components/schedule/Schedule";
 
-import Footer from "@/components/layout/Footer";
 export default function Home() {
   return (
     <main className="min-h-screen bg-background pb-[calc(6rem+env(safe-area-inset-bottom))] text-white">

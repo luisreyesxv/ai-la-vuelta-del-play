@@ -1,7 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Nunito_Sans, Oswald } from "next/font/google";
 import Link from "next/link";
-import dynamic from "next/dynamic";
 
 import "./globals.css";
 

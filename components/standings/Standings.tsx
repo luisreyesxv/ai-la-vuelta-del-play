@@ -102,7 +102,7 @@ export default function Standings() {
   return (
     <section className="mt-8">
       <div className="mb-4">
-        <p className="text-xs font-bold uppercase tracking-widest text-primary">
+        <p className="text-xs font-bold uppercase tracking-widest text-team-secondary">
           La temporada
         </p>
 
