@@ -144,8 +144,12 @@
   --color-team-border: var(--team-card-border);
 
   /* Fonts */
+  --font-logo: var(--font-logo);
+  --font-varsity: var(--font-varsity);
+  --font-athletic: var(--font-athletic);
+
   --font-heading: var(--font-oswald);
-  --font-body: var(--font-nunito);
+  --font-body: var(--font-athletic);
 }
 
 /* =========================================
@@ -158,7 +162,6 @@
 
 html {
   min-height: 100%;
-  background-color: var(--app-background);
 
   scroll-behavior: smooth;
   scroll-padding-top: 80px;
@@ -170,21 +173,26 @@ html {
 body {
   min-height: 100vh;
   margin: 0;
-
   overflow-x: clip;
 
   background-color: var(--app-background);
 
-  background-image: radial-gradient(
-    ellipse at 50% 0%,
-    color-mix(in srgb, var(--team-glow) 7%, transparent),
-    transparent 55%
-  );
+  background-image:
+    radial-gradient(
+      ellipse at 20% 0%,
+      color-mix(in srgb, var(--team-primary) 22%, transparent),
+      transparent 60%
+    ),
+    radial-gradient(
+      ellipse at 80% 100%,
+      color-mix(in srgb, var(--team-primary) 1%, transparent),
+      transparent 55%
+    );
 
+  background-size: 100% 100%;
   background-attachment: fixed;
 
   color: var(--app-foreground);
-
   font-family: var(--font-body), sans-serif;
 
   -webkit-font-smoothing: antialiased;
@@ -198,13 +206,6 @@ body {
 /* =========================================
    6. BASE ELEMENTS
 ========================================= */
-
-button,
-input,
-textarea,
-select {
-  font: inherit;
-}
 
 button {
   cursor: pointer;
@@ -238,9 +239,6 @@ h4,
 h5,
 h6 {
   margin: 0;
-
-  font-family: var(--font-heading), sans-serif;
-  font-weight: 600;
 }
 
 p {

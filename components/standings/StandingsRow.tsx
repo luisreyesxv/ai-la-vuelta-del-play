@@ -14,8 +14,10 @@ export default function StandingsRow({ standing }: StandingRowProps) {
       }`}
     >
       <span
-        className={`font-[family-name:var(--font-oswald)] font-bold ${
-          isAguilas ? "text-primary text-4xl" : "text-muted text-lg"
+        className={` font-bold ${
+          isAguilas
+            ? "text-team-secondary text-4xl font-varsity"
+            : "text-muted text-lg"
         }`}
       >
         {standing.rank ?? "—"}
@@ -23,8 +25,10 @@ export default function StandingsRow({ standing }: StandingRowProps) {
 
       <div className="min-w-0">
         <p
-          className={`truncate font-extrabold ${
-            isAguilas ? "text-white text-md" : "text-muted text-sm"
+          className={`truncate font-bold ${
+            isAguilas
+              ? "text-white text-md font-extrabold "
+              : "text-muted text-sm"
           }`}
         >
           {standing.team.name}

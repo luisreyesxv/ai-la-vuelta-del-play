@@ -110,15 +110,15 @@ export default function Scoreboard() {
     <section>
       <div className="mb-4 flex items-end justify-between">
         <div>
-          <p className="text-xs font-bold uppercase tracking-widest text-team-secondary">
+          <p className="text-md font-bold  font-logo uppercase tracking-widest text-accent">
             Sigue la pelota
           </p>
 
-          <h2 className="mt-1 font-[family-name:var(--font-oswald)] text-2xl font-bold uppercase">
+          <h2 className="mt-1 font-varsity  text-team-secondary text-3xl md:text-4xl">
             Marcadores
           </h2>
 
-          <p className="mt-1 text-xs text--muted">{teamName}</p>
+          <p className="mt-1 text-xs text-muted">{teamName}</p>
         </div>
 
         <button
@@ -163,7 +163,7 @@ export default function Scoreboard() {
         <div className="rounded-xl border border-border bg-surface p-5">
           <p className="font-bold text-primary">{teamName}</p>
 
-          <p className="mt-2 text-sm text--muted">
+          <p className="mt-2 text-sm text-muted">
             Todavía no hay un partido finalizado disponible.
           </p>
         </div>
@@ -172,11 +172,7 @@ export default function Scoreboard() {
       {selectedGame && (
         <div>
           <div className="mb-3 flex items-center gap-2">
-            <span className="text-lg">
-              {selectedTeam === "aguilas" ? "🦅" : "⚾"}
-            </span>
-
-            <h3 className="text-xs font-extrabold uppercase tracking-widest text-accent">
+            <h3 className="text-md font-light font-logo uppercase tracking-widest text-accent">
               Nuestro equipo
             </h3>
           </div>
@@ -188,7 +184,7 @@ export default function Scoreboard() {
 
           <Link
             href={`/games/${selectedGame.gamePk}?team=${selectedTeam}`}
-            className="mt-4 flex w-full items-center justify-center rounded-xl border border-primary-muted  bg-primary px-4 py-3 text-xs font-extrabold uppercase tracking-widest text-on-primary transition-colors hover:bg-primary-hover"
+            className="mt-4 flex w-full items-center justify-center rounded-xl border border-primary-muted  bg-accent px-4 py-3 text-xs font-extrabold uppercase tracking-widest text-on-primary transition-colors hover:bg-primary-hover"
           >
             VER DETALLES DEL PARTIDO →
           </Link>

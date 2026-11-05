@@ -36,7 +36,7 @@ export default function GameStatus({ status, description }: GameStatusProps) {
       </span>
 
       {description && status === "delayed" && (
-        <span className="text-[10px] text--muted">{description}</span>
+        <span className="text-[10px] text-muted">{description}</span>
       )}
     </div>
   );

@@ -109,7 +109,7 @@ export default function GameDetailsPage({ params }: Props) {
 
   if (loading || !gamePk) {
     return (
-      <main className="min-h-screen bg-background p-8 text-center text-white">
+      <main className="min-h-screen p-8 text-center text-white">
         Cargando detalles del partido...
       </main>
     );
@@ -117,7 +117,7 @@ export default function GameDetailsPage({ params }: Props) {
 
   if (error || !game) {
     return (
-      <main className="flex min-h-screen items-center justify-center bg-background px-6 text-center text-white">
+      <main className="flex min-h-screen items-center justify-center px-6 text-center text-white">
         <div className="max-w-md">
           <div className="mb-5 text-5xl">⚾</div>
 
@@ -125,7 +125,7 @@ export default function GameDetailsPage({ params }: Props) {
             Información no disponible
           </h1>
 
-          <p className="mt-4 text-sm leading-6 text--muted">
+          <p className="mt-4 text-sm leading-6 text-muted">
             No podemos encontrar la información de este partido en este momento.
             Por favor, intenta nuevamente más tarde.
           </p>
@@ -162,7 +162,7 @@ export default function GameDetailsPage({ params }: Props) {
   ];
 
   return (
-    <main className="min-h-screen bg-background px-4 pb-28 pt-6 text-white">
+    <main className="min-h-screen px-4 pb-28 pt-6 text-white">
       <div className="mx-auto max-w-6xl">
         <button
           onClick={() => router.back()}
@@ -171,15 +171,17 @@ export default function GameDetailsPage({ params }: Props) {
           ← VOLVER
         </button>
 
-        <p className="text-xs font-bold uppercase tracking-widest text-team-secondary">
+        <p className="text-sm font-logo font-bold uppercase tracking-widest text-accent">
           Detalles del partido
         </p>
 
-        <h1 className="mt-2 text-2xl font-extrabold uppercase">
+        <h1 className="mt-2 text-2xl text-team-secondary font-varsity font-extrabold uppercase">
           {game.away.team.name} VS {game.home.team.name}
         </h1>
 
-        <p className="mt-2 text-sm capitalize text--muted">{formattedDate}</p>
+        <p className="mt-2 text-sm font-athletic capitalize text-muted">
+          {formattedDate}
+        </p>
 
         {/* SCORE */}
 
@@ -202,7 +204,7 @@ export default function GameDetailsPage({ params }: Props) {
           ))}
 
           {game.venue && (
-            <p className="mt-3 border-t border-white/10 pt-4 text-xs text--muted">
+            <p className="mt-3 border-t border-white/10 pt-4 text-xs text-muted">
               📍 {game.venue}
             </p>
           )}
@@ -212,27 +214,27 @@ export default function GameDetailsPage({ params }: Props) {
 
         {isFinal && boxscore && (
           <section className="mt-6 rounded-2xl border border-border bg-surface p-5">
-            <h2 className="mb-5 text-md font-extrabold uppercase tracking-widest text-team-secondary">
+            <h2 className="mb-5 text-md font-varsity font-extrabold uppercase tracking-widest text-team-secondary">
               Decisiones del partido
             </h2>
 
             <div className="grid grid-cols-2 gap-4 mt-6">
               <div className="rounded-xl border border-border bg-surface p-4">
-                <p className="text-xs font-bold uppercase text-muted">
+                <p className="text-xl font-logo font-black uppercase text-muted">
                   Pitcher ganador
                 </p>
 
-                <p className="mt-2 font-extrabold text-team-secondary">
+                <p className="mt-2 text-2xl font-extrabold text-team-secondary">
                   {game.decisions?.winner?.fullName ?? "No disponible"}
                 </p>
               </div>
 
               <div className="rounded-xl border border-border bg-surface p-4">
-                <p className="text-xs font-bold uppercase text-muted">
+                <p className="text-xl font-logo font-black uppercase text-muted">
                   Pitcher perdedor
                 </p>
 
-                <p className="mt-2 font-extrabold text-team-secondary">
+                <p className="mt-2 text-2xl font-extrabold text-team-secondary">
                   {game.decisions?.loser?.fullName ?? "No disponible"}
                 </p>
               </div>
@@ -240,7 +242,7 @@ export default function GameDetailsPage({ params }: Props) {
 
             {savePitcher?.fullName && (
               <div className="mt-4 rounded-xl bg-surface-overlay p-4">
-                <p className="text-xs font-bold uppercase text-accent">
+                <p className="text-xl font-logo font-black uppercase text-accent">
                   Juego salvado
                 </p>
                 <p className="mt-2 font-extrabold">{savePitcher.fullName}</p>
@@ -257,7 +259,7 @@ export default function GameDetailsPage({ params }: Props) {
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id)}
-                className={`border-b-2 px-4 py-4 text-xs font-extrabold uppercase transition-colors ${
+                className={`border-b-2 px-4 py-4 text-2xl font-logo font-extrabold uppercase transition-colors ${
                   activeTab === tab.id
                     ? "border-accent text-team-secondary font-extrabold "
                     : "border-transparent text-subtle"
@@ -273,14 +275,14 @@ export default function GameDetailsPage({ params }: Props) {
 
         {activeTab === "summary" && (
           <section className="mt-8">
-            <h2 className="mb-4 text-lg font-extrabold uppercase">
+            <h2 className="mb-4 text-lg text-team-secondary font-extrabold uppercase">
               Resultados por entrada
             </h2>
 
             {game.inning?.scores?.length ? (
               <div className="overflow-x-auto rounded-xl border border-border bg-surface">
                 <table className="w-full text-center text-sm">
-                  <thead className="text-team-secondary">
+                  <thead className="text-accent">
                     <tr>
                       <th className="p-3 text-left">Equipo</th>
                       {game.inning.scores.map((inning) => (
@@ -316,7 +318,7 @@ export default function GameDetailsPage({ params }: Props) {
                 </table>
               </div>
             ) : (
-              <p className="rounded-xl bg-surface p-4 text-sm text--muted">
+              <p className="rounded-xl bg-surface p-4 text-sm text-muted">
                 Resultados por entrada no disponibles.
               </p>
             )}
@@ -326,17 +328,17 @@ export default function GameDetailsPage({ params }: Props) {
         {/* BATTING */}
 
         {activeTab === "batting" && (
-          <section className="mt-8 space-y-8">
-            <h2 className="text-xl font-extrabold uppercase">
+          <section className="mt-8 space-y-8 ">
+            <h2 className="text-xl font-atheltic font-extrabold uppercase">
               Estadísticas de bateadores
             </h2>
 
             {boxscoreLoading && (
-              <p className="text-sm text--muted">Cargando estadísticas...</p>
+              <p className="text-sm text-muted">Cargando estadísticas...</p>
             )}
 
             {!boxscoreLoading && !boxscore && (
-              <p className="rounded-xl bg-surface p-4 text-sm text--muted">
+              <p className="rounded-xl font-athletic bg-surface p-4 text-sm text-muted">
                 Las estadísticas no están disponibles.
               </p>
             )}
@@ -349,13 +351,13 @@ export default function GameDetailsPage({ params }: Props) {
 
                 return (
                   <div key={label}>
-                    <h3 className="mb-3 font-extrabold uppercase text-primary">
+                    <h3 className="mb-3 font-extrabold uppercase text-primary font-athletic">
                       {label}
                     </h3>
 
-                    <div className="overflow-x-auto rounded-xl border border-border bg-surface">
+                    <div className="overflow-x-auto rounded-xl border border-border bg-surface font-athletic">
                       <table className="w-full text-center text-xs">
-                        <thead className="text-primary">
+                        <thead className="text-accent">
                           <tr>
                             <th className="p-3 text-left">Jugador</th>
                             <th>AB</th>
@@ -399,7 +401,7 @@ export default function GameDetailsPage({ params }: Props) {
 
                           {players.length === 0 && (
                             <tr>
-                              <td colSpan={11} className="p-4 text--muted">
+                              <td colSpan={11} className="p-4 text-muted">
                                 Estadísticas no disponibles.
                               </td>
                             </tr>
@@ -435,7 +437,7 @@ export default function GameDetailsPage({ params }: Props) {
 
                     <div className="overflow-x-auto rounded-xl border border-border bg-surface">
                       <table className="w-full text-center text-xs">
-                        <thead className="text-primary">
+                        <thead className="text-accent">
                           <tr>
                             <th className="p-3 text-left">Lanzador</th>
                             <th>IP</th>
@@ -475,7 +477,7 @@ export default function GameDetailsPage({ params }: Props) {
 
                           {players.length === 0 && (
                             <tr>
-                              <td colSpan={9} className="p-4 text--muted">
+                              <td colSpan={9} className="p-4 text-muted">
                                 Estadísticas no disponibles.
                               </td>
                             </tr>
@@ -488,11 +490,11 @@ export default function GameDetailsPage({ params }: Props) {
               })}
 
             {boxscoreLoading && (
-              <p className="text-sm text--muted">Cargando estadísticas...</p>
+              <p className="text-sm text-muted">Cargando estadísticas...</p>
             )}
 
             {!boxscoreLoading && !boxscore && (
-              <p className="text-sm text--muted">
+              <p className="rounded-xl font-athletic bg-surface p-4 text-sm text-muted">
                 Estadísticas no disponibles.
               </p>
             )}

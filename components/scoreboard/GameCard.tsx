@@ -37,9 +37,9 @@ export default function GameCard({ game, teamId }: GameCardProps) {
           </span>
         </div>
 
-        <p className="mt-2 text-xs capitalize text--muted">{formattedDate}</p>
+        <p className="mt-2 text-xs capitalize text-muted">{formattedDate}</p>
 
-        <p className="mt-1 text-xs text--muted">
+        <p className="mt-1 text-xs text-muted">
           Rival: <span className="font-bold text-white">{opponent}</span>
         </p>
       </div>
@@ -60,7 +60,7 @@ export default function GameCard({ game, teamId }: GameCardProps) {
       {/* VENUE */}
       {game.venue && (
         <div className="border-t border-white/10 px-4 py-3">
-          <p className="text-xs text--muted">📍 {game.venue}</p>
+          <p className="text-xs text-muted">📍 {game.venue}</p>
         </div>
       )}
     </article>

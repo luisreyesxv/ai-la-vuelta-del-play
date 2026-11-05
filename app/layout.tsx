@@ -1,5 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Nunito_Sans, Oswald } from "next/font/google";
+import localFont from "next/font/local";
+
 import Link from "next/link";
 
 import "./globals.css";
@@ -8,6 +10,21 @@ import FloatingVideo from "@/components/broadcast/FloatingVideo";
 import Footer from "@/components/layout/Footer";
 
 import { TeamProvider } from "@/contexts/TeamContext";
+
+const logoFont = localFont({
+  src: "../public/fonts/PunkrockshowRegular-xP4m.ttf",
+  variable: "--font-logo",
+});
+
+const varsityFont = localFont({
+  src: "../public/fonts/sport brand.ttf",
+  variable: "--font-varsity",
+});
+
+const athleticFont = localFont({
+  src: "../public/fonts/EA Sports Covers SC 1.5.ttf",
+  variable: "--font-athletic",
+});
 
 const oswald = Oswald({
   subsets: ["latin"],
@@ -49,15 +66,20 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="es">
-      <body className={`${oswald.variable} ${nunitoSans.variable}`}>
+      <body
+        className={`${oswald.variable} ${nunitoSans.variable} ${logoFont.variable} ${varsityFont.variable} ${athleticFont.variable}`}
+      >
         <TeamProvider>
           <header className=" top-0 z-40 border-b border-border bg-background/95 backdrop-blur">
             <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4 sm:px-6">
               <div>
-                <h1 className="font-[family-name:var(--font-oswald)] text-xl font-bold tracking-wide sm:text-2xl">
-                  LA VUELTA <span className="text-primary">DEL PLAY</span>
+                <h1 className="font-logo text-team-secondary text-xl font-bold  uppercase tracking-wide sm:text-5xl">
+                  LA VUELTA{" "}
+                  <span className="text-team-secondary lowercase font-extrabold">
+                    DEL PLAY
+                  </span>
                 </h1>
-                <p className="text-[10px] font-bold tracking-widest text--muted">
+                <p className="text-[15px] font-logo uppercase font-bold tracking-widest text-accent">
                   ¡LA PELOTA SE VIVE AQUÍ!
                 </p>
               </div>
@@ -73,7 +95,7 @@ export default function RootLayout({
           </header>
 
           <FloatingVideo />
-          {children}
+          <div className="font-athletic">{children}</div>
           <Footer />
           <nav className="fixed inset-x-0 bottom-0 z-50 border-t border-border bg-surface-overlay/95 pb-[env(safe-area-inset-bottom)] backdrop-blur">
             <div className="mx-auto grid h-16 max-w-lg grid-cols-4">
@@ -86,21 +108,21 @@ export default function RootLayout({
               </Link>
               <Link
                 href="/#marcadores"
-                className="flex flex-col items-center justify-center gap-1 text--muted"
+                className="flex flex-col items-center justify-center gap-1 text-muted"
               >
                 <span className="text-xl">⚾</span>
                 <span className="text-[10px] font-bold">Marcadores</span>
               </Link>
               <Link
                 href="/#posiciones"
-                className="flex flex-col items-center justify-center gap-1 text--muted"
+                className="flex flex-col items-center justify-center gap-1 text-muted"
               >
                 <span className="text-xl">🏆</span>
                 <span className="text-[10px] font-bold">Posiciones</span>
               </Link>
               <Link
                 href="/#juegos"
-                className="flex flex-col items-center justify-center gap-1 text--muted"
+                className="flex flex-col items-center justify-center gap-1 text-muted"
               >
                 <span className="text-xl">📅</span>
                 <span className="text-[10px] font-bold">Juegos</span>

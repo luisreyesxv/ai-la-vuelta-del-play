@@ -41,15 +41,15 @@ export default function TeamForm({ games, teamId, teamName }: TeamFormProps) {
   return (
     <section className="mt-8 rounded-2xl border border-border bg-surface p-4">
       <div className="mb-4">
-        <p className="text-xs font-bold uppercase tracking-widest text-team-secondary">
+        <p className="text-lg font-logo font-bold uppercase tracking-widest text-accent">
           Rendimiento reciente
         </p>
 
-        <h2 className="mt-1 font-[family-name:var(--font-oswald)] text-xl font-bold uppercase">
+        <h2 className="mt-1 font-varsity text-team-secondary text-xl font-bold uppercase">
           Últimos 5 partidos
         </h2>
 
-        <p className="mt-1 text-xs text--muted">{teamName}</p>
+        <p className="mt-1 text-xs text-muted">{teamName}</p>
       </div>
 
       <div className="flex items-center justify-between gap-3">
@@ -58,7 +58,7 @@ export default function TeamForm({ games, teamId, teamName }: TeamFormProps) {
             {wins}-{losses}
           </p>
 
-          <p className="mt-1 text-[10px] uppercase tracking-widest text--muted">
+          <p className="mt-1 text-[10px] uppercase tracking-widest text-muted">
             Ganados - Perdidos
           </p>
         </div>
@@ -90,7 +90,7 @@ export default function TeamForm({ games, teamId, teamName }: TeamFormProps) {
             </div>
           ))
         ) : (
-          <p className="text-xs text--muted">
+          <p className="text-xs text-muted">
             No hay resultados recientes disponibles.
           </p>
         )}

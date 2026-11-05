@@ -20,7 +20,7 @@ export default function StandingsUpdate({
   return (
     <div className="flex items-center justify-between gap-3 pt-3">
       <div className="min-w-0">
-        <p className="text-[10px] text--muted">Última actualización</p>
+        <p className="text-[10px] text-muted">Última actualización</p>
 
         <p className="truncate text-xs font-bold text--secondary">
           {formattedDate ?? "No disponible"}

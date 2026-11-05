@@ -102,22 +102,22 @@ export default function Standings() {
   return (
     <section className="mt-8">
       <div className="mb-4">
-        <p className="text-xs font-bold uppercase tracking-widest text-team-secondary">
+        <p className="text-md font-bold font-logo uppercase tracking-widest text-accent">
           La temporada
         </p>
 
-        <h2 className="mt-1 font-[family-name:var(--font-oswald)] text-2xl font-bold uppercase">
+        <h2 className="mt-1 font-varsity text-team-secondary text-3xl md:text-4xl font-bold uppercase">
           Posiciones {LEAGUE_NAMES[selectedTeam]}
         </h2>
 
-        <p className="mt-1 text-xs text--muted">
+        <p className="mt-1 text-xs text-muted">
           Así marcha {TEAM_NAMES[selectedTeam]} en su liga.
         </p>
       </div>
 
       {loading && !data && (
         <div className="rounded-xl border border-border bg-surface p-6 text-center">
-          <p className="text-sm text--muted">Cargando posiciones...</p>
+          <p className="text-sm text-muted">Cargando posiciones...</p>
         </div>
       )}
 
@@ -154,7 +154,7 @@ export default function Standings() {
 
       {data && data.data.standings.length === 0 && (
         <div className="rounded-xl border border-border bg-surface p-6 text-center">
-          <p className="text-sm text--muted">
+          <p className="text-sm text-muted">
             No hay posiciones disponibles actualmente.
           </p>
         </div>

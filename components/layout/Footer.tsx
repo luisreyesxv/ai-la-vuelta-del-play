@@ -25,11 +25,9 @@ export default function Footer() {
   const { selectedTeam } = useTeam();
 
   return (
-    <footer className="w-full px-5 pb-24 pt-12 text-center sm:px-8 lg:px-12">
-      <p className="font-[family-name:var(--font-oswald)] text-xl font-bold uppercase text-accent">
-        {selectedTeam === "aguilas"
-          ? "¡ARRIBA LAS ÁGUILAS!"
-          : "LET'S GO YANKEES!"}
+    <footer className="w-full px-5 pb-24 pt-12 text-center sm:px-8 lg:px-12 font-athletic">
+      <p className=" text-xl font-bold uppercase text-team-secondary">
+        {selectedTeam === "aguilas" ? "La Leña Está Aquí" : "LET'S GO YANKEES!"}
       </p>
 
       <p className="mt-3 text-xs text-subtle">

@@ -108,8 +108,8 @@ export default function FloatingVideo() {
 
           <div className="flex shrink-0 flex-wrap items-center justify-between gap-3 bg-surface-overlay px-4 py-2 sm:px-6">
             <div className="flex min-w-0 items-center gap-3">
-              <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-primary text-lg text-on-primary">
-                ⚾
+              <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-primary text-2xl text-on-primary">
+                {isVideoAguilas ? "🇩🇴" : "🇺🇸"}
               </div>
 
               <div className="min-w-0">
@@ -117,7 +117,7 @@ export default function FloatingVideo() {
                   {TEAM_NAMES[videoTeam]}
                 </p>
 
-                <p className="text-xs text--muted">
+                <p className="text-xs text-muted">
                   {isVideoAguilas ? "KQ94.5" : "Major League Baseball podcasts"}
                 </p>
 
@@ -153,7 +153,7 @@ export default function FloatingVideo() {
                     : "border border-border text-white"
                 }`}
               >
-                🦅 ÁGUILAS
+                🇩🇴 ÁGUILAS
               </button>
 
               <button
@@ -166,7 +166,7 @@ export default function FloatingVideo() {
                     : "border border-border text-white"
                 }`}
               >
-                ⚾ YANKEES
+                🇺🇸 YANKEES
               </button>
             </div>
           </div>
