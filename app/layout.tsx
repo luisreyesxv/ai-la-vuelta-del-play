@@ -9,6 +9,7 @@ import BottomNav from "@/components/layout/BottomNav";
 import Footer from "@/components/layout/Footer";
 import { LanguageProvider } from "@/contexts/LanguageContext";
 import LanguageToggle from "@/components/layout/LanguageToggle";
+import ScreenWakeLock from "@/hooks/wakeLock";
 
 import { TeamProvider } from "@/contexts/TeamContext";
 
@@ -41,16 +42,63 @@ const nunitoSans = Nunito_Sans({
 
 export const metadata: Metadata = {
   title: {
-    default: "La Vuelta Del Play",
+    default: "La Vuelta Del Play | Béisbol en vivo, resultados y estadísticas",
     template: "%s | La Vuelta Del Play",
   },
+
   description:
-    "¡La pelota se vive aquí! Sigue las Águilas Cibaeñas y todo el béisbol dominicano.",
+    "¡La pelota se vive aquí! Sigue las Águilas Cibaeñas y los New York Yankees. Consulta marcadores, calendario, posiciones, estadísticas y transmisiones en un solo lugar.",
+
   applicationName: "La Vuelta Del Play",
+
+  keywords: [
+    "La Vuelta Del Play",
+    "Águilas Cibaeñas",
+    "New York Yankees",
+    "béisbol dominicano",
+    "MLB",
+    "LIDOM",
+    "marcadores de béisbol",
+    "resultados en vivo",
+    "posiciones de béisbol",
+    "estadísticas de béisbol",
+    "calendario de béisbol",
+  ],
+
   appleWebApp: {
     capable: true,
     title: "La Vuelta Del Play",
     statusBarStyle: "black-translucent",
+  },
+
+  icons: {
+    icon: [
+      { url: "/favicon-32x32.png", sizes: "32x32", type: "image/png" },
+      { url: "/favicon-16x16.png", sizes: "16x16", type: "image/png" },
+    ],
+  },
+
+  manifest: "/site.webmanifest",
+
+  openGraph: {
+    type: "website",
+    locale: "es_DO",
+    siteName: "La Vuelta Del Play",
+    title: "La Vuelta Del Play | ¡La pelota se vive aquí!",
+    description:
+      "Marcadores, estadísticas, posiciones, calendario y transmisiones de tus equipos favoritos.",
+  },
+
+  twitter: {
+    card: "summary_large_image",
+    title: "La Vuelta Del Play",
+    description:
+      "¡La pelota se vive aquí! Sigue los partidos, resultados y estadísticas.",
+  },
+
+  robots: {
+    index: true,
+    follow: true,
   },
 };
 
@@ -99,6 +147,8 @@ export default function RootLayout({
       <body
         className={`${oswald.variable} ${nunitoSans.variable} ${logoFont.variable} ${varsityFont.variable} ${athleticFont.variable}`}
       >
+        <ScreenWakeLock />
+
         <TeamProvider>
           <LanguageProvider>
             <header className=" top-0 z-40 border-b border-border bg-background/95 backdrop-blur">

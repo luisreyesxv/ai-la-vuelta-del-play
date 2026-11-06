@@ -117,8 +117,7 @@ export default function Schedule() {
   if (loading) {
     return (
       <section className="py-8 text-center text-sm text-muted">
-        {tReplace("loadingCalendar", teamName)}...Cargando calendario de{" "}
-        {teamName}...
+        {tReplace("loadingCalendar", teamName)}
       </section>
     );
   }
@@ -139,8 +138,7 @@ export default function Schedule() {
         </p>
 
         <h2 className="mt-1 font-varsity text-team-secondary text-3xl md:text-4xl font-bold uppercase">
-          {t("calendar")}
-          {teamName}
+          {t("calendar")} {teamName}
         </h2>
 
         <p className="mt-1 text-xs text-muted">
